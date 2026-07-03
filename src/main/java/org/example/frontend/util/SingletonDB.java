@@ -25,7 +25,12 @@ public class SingletonDB {
             if (!url.endsWith("/")) {
                 url += "/";
             }
-            config.setJdbcUrl(url + getDbName());
+            String finalUrl = url + getDbName();
+            System.out.println("==== DEBUG ====");
+            System.out.println("TENTANDO CONECTAR NA URL: " + finalUrl);
+            System.out.println("USUARIO: " + getDbUser());
+            System.out.println("===============");
+            config.setJdbcUrl(finalUrl);
             config.setUsername(getDbUser());
             config.setPassword(getDbPassword());
             config.setMaximumPoolSize(10);
