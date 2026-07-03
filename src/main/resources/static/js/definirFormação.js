@@ -545,7 +545,7 @@ async function construirBarraFerramentas(instrumentos) {
                 <button class="btn p-2 shadow-sm mb-1"
                         onclick="inserirInstrumento(${instrumento.instru_id})"
                         style="border: 1px solid #d4af37; border-radius: 8px; background-color: #fff; transition: transform 0.2s;">
-                    <img src="uploads/${instrumento.instru_img}?v=${Date.now()}"
+                    <img src="${instrumento.instru_img}"
                          class="instrument-img"
                          alt="${instrumento.instru_nome}"
                          style="filter: hue-rotate(340deg); max-height: 45px; max-width: 45px; object-fit: contain;">
