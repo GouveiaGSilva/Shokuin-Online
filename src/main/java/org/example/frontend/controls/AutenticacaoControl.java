@@ -17,9 +17,10 @@ public class AutenticacaoControl {
 
     @PostMapping("/login")
     public ResponseEntity<Boolean> realizarLogin(@RequestParam String usuario, @RequestParam String senha, HttpSession session) {
-        boolean valido = verificarlogin(usuario, senha);
-        if (valido) {
+        Usuario u = verificarlogin(usuario, senha);
+        if (u != null) {
             session.setAttribute("usuarioLogado", usuario);
+            session.setAttribute("usuarioNivel", u.getUsu_nivel());
             return ResponseEntity.ok(true);
         }
         return ResponseEntity.ok(false);
@@ -37,12 +38,13 @@ public class AutenticacaoControl {
         if (usuarioLogado == null) {
             return ResponseEntity.status(401).body("Nenhum usuário conectado.");
         }
-        SingletonDB.conectar();
-        //String nomeCargo = listarcargo(usuarioLogado);
-        SingletonDB.desconectar();
-        Map<String, String> dadosUsuario = new HashMap<>();
+        
+        Integer nivel = (Integer) session.getAttribute("usuarioNivel");
+        if (nivel == null) nivel = 1;
+
+        Map<String, Object> dadosUsuario = new HashMap<>();
         dadosUsuario.put("nome", usuarioLogado);
-        //dadosUsuario.put("cargo", nomeCargo);
+        dadosUsuario.put("nivel", nivel);
 
         return ResponseEntity.ok(dadosUsuario);
     }
@@ -58,14 +60,17 @@ public class AutenticacaoControl {
         return cargo;
     }
 
-    private boolean verificarlogin(String usuario, String senha) {
+    private Usuario verificarlogin(String usuario, String senha) {
         Usuario u = new Usuario(usuario, senha);
-        if("admin".equals(usuario) && "admin123".equals(senha))
-            return true;
-        else if(SingletonDB.conectar()){
-            return u.validarDados();
+        if("admin".equals(usuario) && "admin123".equals(senha)) {
+            Usuario admin = new Usuario();
+            admin.setNome("admin");
+            admin.setUsu_nivel(3);
+            return admin;
+        } else if(SingletonDB.conectar()){
+            return u.fazerLogin();
         }
-        return false;
+        return null;
     }
 
 }

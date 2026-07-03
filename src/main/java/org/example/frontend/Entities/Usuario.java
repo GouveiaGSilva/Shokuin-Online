@@ -12,6 +12,7 @@ public class Usuario {
     private String nome;
     private String senha;
     private Membro membro;
+    private int usu_nivel;
 
     public Usuario(String nome) {
         this.nome = nome;
@@ -22,14 +23,23 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public Usuario(int id, String nome, String senha, Membro membro) {
+    public Usuario(int id, String nome, String senha, Membro membro, int usu_nivel) {
         this.id = id;
         this.nome = nome;
         this.senha = senha;
         this.membro = membro;
+        this.usu_nivel = usu_nivel;
     }
 
     public Usuario() {
+    }
+
+    public int getUsu_nivel() {
+        return usu_nivel;
+    }
+
+    public void setUsu_nivel(int usu_nivel) {
+        this.usu_nivel = usu_nivel;
     }
 
     public int getId() {
@@ -79,9 +89,31 @@ public class Usuario {
         }
     }
 
+    public Usuario fazerLogin() {
+        Conexao con = SingletonDB.getConexao();
+        String sql = "select * from usuario where usu_nome = '"+nome+"' and usu_senha = '"+senha+"'";
+        ResultSet rs = con.consultar(sql);
+        try {
+            if(rs!=null && rs.next()) {
+                if (rs.getString("usu_nome").equals(nome) && rs.getString("usu_senha").equals(senha)) {
+                    Usuario u = new Usuario();
+                    u.setId(rs.getInt("usu_id"));
+                    u.setNome(rs.getString("usu_nome"));
+                    u.setUsu_nivel(rs.getInt("usu_nivel"));
+                    return u;
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public boolean cadastrarusuario() {
         Conexao con = SingletonDB.getConexao();
-        String sql = "insert into usuario (usu_nome, usu_senha, membro_id) values ('"+nome+"', '"+senha+"', "+membro.getId()+")";
+        // default para 1 caso venha 0
+        int nivel = usu_nivel > 0 ? usu_nivel : 1;
+        String sql = "insert into usuario (usu_nome, usu_senha, membro_id, usu_nivel) values ('"+nome+"', '"+senha+"', "+membro.getId()+", "+nivel+")";
         try {
             return con.manipular(sql);
         } catch (Exception e) {

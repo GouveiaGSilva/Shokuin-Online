@@ -15,7 +15,17 @@ document.getElementById('form-login').addEventListener('submit', async function 
         if (response.ok) {
             const loginAceito = await response.json();
             if (loginAceito === true) {
-                window.location.href = "index.html";
+                const responseUser = await fetch("/apiautenticacao/usuario-atual");
+                if (responseUser.ok) {
+                    const usuario = await responseUser.json();
+                    if (usuario.nivel === 1) {
+                        window.location.href = "exibirAgendas.html";
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                } else {
+                    window.location.href = "index.html";
+                }
             } else {
                 mensagem.innerText = "Acesso negado. Usuário ou senha inválidos.";
                 alerta.classList.remove('d-none');

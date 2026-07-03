@@ -24,23 +24,67 @@ async function carregarHome() {
         const sidebarElement = document.getElementById("sidebar");
         if (!sidebarElement)
             return;
-        sidebarElement.innerHTML = `    <div class="sidebar-logo-area p-4 position-relative">
-                <a href="index.html" class="d-flex align-items-center gap-3 text-decoration-none" style="cursor: pointer;">
-                    <div class="sidebar-logo-glow"></div>
-                    <div class="logo-circle rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow">
-                        <span class="text-white font-display fw-bold fs-5">F</span>
-                    </div>
-                    <div>
-                        <h1 class="text-white font-display fw-bold fs-5 mb-0" style="letter-spacing: 0.1em;">SHOKUIN</h1>
-                        <p class="text-taiko-red m-0" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600;">Dantai Fênix</p>
-                    </div>
-                </a>
-                <button type="button" class="btn btn-link text-secondary d-md-none position-absolute top-0 end-0 mt-3 me-2 text-decoration-none" onclick="toggleSidebar()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
+        let cargos = ["", "Membro Comum", "Criador de Formações", "Acesso Total"];
+        let textoCargo = usuario.nivel && usuario.nivel <= 3 ? cargos[usuario.nivel] : "Membro Comum";
+        
+        let menuItems = ``;
 
-        <div class="flex-grow-1 overflow-auto p-3 sidebar-container mt-2">
+        if (usuario.nivel === 1) {
+            menuItems = `
+            <div class="mb-4">
+                <h6 class="nav-section-title px-3 mb-3 fw-bold">GERAL</h6>
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-2">
+                        <button type="button" class="btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#agenda-collapse" aria-expanded="false" aria-controls="agenda-collapse">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar-event-fill icon-main"></i>
+                                <span>Agenda</span>
+                            </div>
+                        </button>
+                        <div class="collapse" id="agenda-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                                <li><a href="../exibirAgendas.html">Ver Agenda Completa</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>`;
+        } else if (usuario.nivel === 2) {
+            menuItems = `
+            <div class="mb-4">
+                <h6 class="nav-section-title px-3 mb-3 fw-bold">GERAL</h6>
+                <ul class="list-unstyled ps-0">
+                    <li class="mb-2">
+                        <button type="button" class="btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#agenda-collapse" aria-expanded="false" aria-controls="agenda-collapse">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar-event-fill icon-main"></i>
+                                <span>Agenda</span>
+                            </div>
+                        </button>
+                        <div class="collapse" id="agenda-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                                <li><a href="../exibirAgendas.html">Ver Agenda Completa</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mb-2">
+                        <button type="button" class="btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#formacoes-collapse" aria-expanded="false" aria-controls="formacoes-collapse">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-grid-fill icon-main"></i>
+                                <span>Formações</span>
+                            </div>
+                        </button>
+                        <div class="collapse" id="formacoes-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                                <li><a href="DefinirFormação.html">Criar Nova Formação</a></li>
+                                <li><a href="listarFormacoes.html">Ver Todas as Formações</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>`;
+        } else {
+            menuItems = `
             <div class="mb-4">
                 <h6 class="nav-section-title px-3 mb-3 fw-bold">FUNDAMENTAIS</h6>
                 <ul class="list-unstyled ps-0">
@@ -60,7 +104,6 @@ async function carregarHome() {
                             </ul>
                         </div>
                     </li>
-                    <li class="mb-2">
                     <li class="mb-2">
                         <button type="button" class="btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#formacoes-collapse" aria-expanded="false" aria-controls="formacoes-collapse">
                             <div class="d-flex align-items-center">
@@ -102,13 +145,11 @@ async function carregarHome() {
                     
                         <div class="collapse" id="estoque-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    
                                 <li>
                                     <a href="controlarEstoque.html">
                                         Controle de Estoque
                                     </a>
                                 </li>
-                    
                                 <li>
                                     <a href="historicoMovimentacao.html">
                                         Histórico de Movimentação
@@ -149,7 +190,6 @@ async function carregarHome() {
                         </button>
                         <div class="collapse" id="membros-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
-                              
                                 <li><a href="cadMembro.html">Cadastrar</a></li>
                                 <li><a href="listarMembros.html">Ver Lista</a></li>
                             </ul>
@@ -167,13 +207,11 @@ async function carregarHome() {
                         </button>
                         <div class="collapse" id="usuario-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    
                                 <li>
                                     <a href="cadastroUsuario.html">
                                         Cadastrar Usuário
                                     </a>
                                 </li>
-                    
                             </ul>
                         </div>
                     </li>
@@ -220,7 +258,27 @@ async function carregarHome() {
                         </div>
                     </li>
                 </ul>
+            </div>`;
+        }
+
+        sidebarElement.innerHTML = `    <div class="sidebar-logo-area p-4 position-relative">
+                <a href="index.html" class="d-flex align-items-center gap-3 text-decoration-none" style="cursor: pointer;">
+                    <div class="sidebar-logo-glow"></div>
+                    <div class="logo-circle rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow">
+                        <span class="text-white font-display fw-bold fs-5">F</span>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-display fw-bold fs-5 mb-0" style="letter-spacing: 0.1em;">SHOKUIN</h1>
+                        <p class="text-taiko-red m-0" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600;">Dantai Fênix</p>
+                    </div>
+                </a>
+                <button type="button" class="btn btn-link text-secondary d-md-none position-absolute top-0 end-0 mt-3 me-2 text-decoration-none" onclick="toggleSidebar()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
+
+        <div class="flex-grow-1 overflow-auto p-3 sidebar-container mt-2">
+            ${menuItems}
         </div>
 
             <div class="p-3 border-top border-secondary" style="border-opacity: 0.2 !important;">
@@ -231,7 +289,7 @@ async function carregarHome() {
                         </div>
                         <div>
                             <h6 class="text-white mb-0" style="font-size: 0.875rem; text-transform: capitalize;">${usuario.nome}</h6>
-                            <!--<small class="text-taiko-gold" style="font-size: 0.75rem;">${usuario.cargo}</small>-->
+                            <small class="text-taiko-gold" style="font-size: 0.75rem;">${textoCargo}</small>
                         </div>
                     </div>
                     <button type="button" class="btn btn-link text-secondary p-1 text-decoration-none" onclick="abrirModalLogout()" title="Sair do Sistema" style="color: #9ca3af !important;">

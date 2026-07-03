@@ -15,7 +15,8 @@ public class CadastroUsuarioControl {
     public ResponseEntity<Object> cadastrarUsuario(
             @RequestParam String nomeMembro,
             @RequestParam String usuario,
-            @RequestParam String senha
+            @RequestParam String senha,
+            @RequestParam(defaultValue = "1") int nivel
     ) {
         SingletonDB.conectar();
         if (nomeMembro.isBlank() || usuario.isBlank() || senha.isBlank()) {
@@ -32,6 +33,7 @@ public class CadastroUsuarioControl {
         }
         Usuario novoUsuario = new Usuario(usuario, senha);
         novoUsuario.setMembro(membro);
+        novoUsuario.setUsu_nivel(nivel);
         if(novoUsuario.existeUsuario()) {
             SingletonDB.desconectar();
             return ResponseEntity.badRequest().body("Não foi possível realizar o cadastro: Usuário já cadastrado.");
