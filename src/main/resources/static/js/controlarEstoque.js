@@ -3,7 +3,7 @@ var subtitulo = document.getElementById("subtitulo");
 var selecionada = 'e';
 var inputSelecionado = null;
 
-const url = "http://localhost:8080/";
+const url = "/";
 var vet = [];
 const modal = new bootstrap.Modal(document.getElementById('modalMsg'));
 var msg = document.getElementById("msg");
@@ -43,7 +43,7 @@ async function registrarEntrada(e){
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(estoque)
         }
-        await fetch("http://localhost:8080/estoque/registrarEntrada", requestOptions)
+        await fetch("/estoque/registrarEntrada", requestOptions)
             .then(resp => {
                 if (resp.ok) {
                     registraMovimento(mov);
@@ -94,7 +94,7 @@ async function registrarSaida(e){
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(estoque)
         }
-        await fetch("http://localhost:8080/estoque/registrarSaida", requestOptions)
+        await fetch("/estoque/registrarSaida", requestOptions)
             .then(resp => {
                 if (resp.ok) {
                     registraMovimento(mov);

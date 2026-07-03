@@ -59,7 +59,7 @@ function salvarRepertorio() {
         params.append('idApresentacao', parseInt(idApresentacao));
         listaidMusica.forEach(id => params.append('listaMusica', id));
         listaidFormacao.forEach(id => params.append('listaFormacao', id));
-        let url = isEdicao ? "http://localhost:8080/apirepertorio/atualizarepertorio" : "http://localhost:8080/apirepertorio/cadrepertorio";
+        let url = isEdicao ? "/apirepertorio/atualizarepertorio" : "/apirepertorio/cadrepertorio";
         let metodo = isEdicao ? "PUT" : "POST";
         fetch(url, {
             method: metodo,
@@ -112,7 +112,7 @@ function limparRepertorio() {
 }
 
 function carregarSelectMusica(){
-    fetch("http://localhost:8080/apimusica/listamusicas")
+    fetch("/apimusica/listamusicas")
         .then(response => response.json())
         .then(data => {
             listaMusica = data;
@@ -158,7 +158,7 @@ function renderizarSelectFormacao(lista){
 }
 
 function carregarFormacoes(){
-    fetch('http://localhost:8080/formacao/listar-todas')
+    fetch('/formacao/listar-todas')
         .then(res => res.json())
         .then(lista => {
             listaFormacao = lista;
@@ -170,7 +170,7 @@ function carregarFormacoes(){
 
 function carregarRepertorioExistente() {
     if(!idApresentacao || idApresentacao === "undefined" || idApresentacao === "null") return;
-    fetch("http://localhost:8080/apirepertorio/get?idApresentacao=" + idApresentacao)
+    fetch("/apirepertorio/get?idApresentacao=" + idApresentacao)
         .then(response => {
             if(response.ok) return response.json();
             throw new Error("Não encontrado");

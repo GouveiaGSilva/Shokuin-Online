@@ -1,7 +1,7 @@
 const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-const url = "http://localhost:8080/apresentacao";
-const urlDoc = "http://localhost:8080/doc";
-const urlReper = "http://localhost:8080/apirepertorio"
+const url = "/apresentacao";
+const urlDoc = "/doc";
+const urlReper = "/apirepertorio"
 
 let idApresentacaoSelecionada = null;
 let listaAg = [];
@@ -13,9 +13,9 @@ function cadastrarAgenda(id) {
 
 async function verificarLogin() {
     try {
-        const response = await fetch("http://localhost:8080/apiautenticacao/usuario-atual");
+        const response = await fetch("/apiautenticacao/usuario-atual");
         if (response.status === 401) {
-            window.location.href = "http://localhost:8080/login.html";
+            window.location.href = "/login.html";
             return;
         }
         if (!response.ok) {
@@ -23,7 +23,7 @@ async function verificarLogin() {
         }
     } catch (error) {
         console.error("Erro de autenticação:", error);
-        window.location.href = "http://localhost:8080/login.html";
+        window.location.href = "/login.html";
     }
 }
 
@@ -66,7 +66,7 @@ async function listarApresentacao() {
                     listaAgLocal.push(ag);
                 }
             }
-            const respAgenda = await fetch("http://localhost:8080/apiagenda/getagenda");
+            const respAgenda = await fetch("/apiagenda/getagenda");
             if (respAgenda.ok) {
                 const agendasAgendadas = await respAgenda.json();
                 for (const ag of agendasAgendadas) {

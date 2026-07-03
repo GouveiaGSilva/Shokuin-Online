@@ -1,5 +1,5 @@
 const form = document.getElementById('formCadastroUsuario');
-const urlBackend = "http://localhost:8080/";
+const urlBackend = "/";
 
 if (form) {
     form.onsubmit = submeterFormulario;

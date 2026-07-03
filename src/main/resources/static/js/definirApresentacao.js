@@ -1,5 +1,5 @@
 const inputTitulo = document.getElementById('doc-titulo');
-const url = "http://localhost:8080/apresentacao";
+const url = "/apresentacao";
 var idApresentacao = null;
 
 function ajustarLarguraTitulo() {

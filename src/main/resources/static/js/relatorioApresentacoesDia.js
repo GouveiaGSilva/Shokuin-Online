@@ -34,7 +34,7 @@ async function buscarAgendasPorPeriodo() {
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/apiagenda/getagendaporperiodo?inicio=${dataIni}&fim=${dataFim}`);
+        const response = await fetch(`/apiagenda/getagendaporperiodo?inicio=${dataIni}&fim=${dataFim}`);
         
         if (!response.ok) {
             return [];

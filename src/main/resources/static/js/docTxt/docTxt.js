@@ -1,7 +1,7 @@
 const Size = Quill.import('attributors/style/size');
 Size.whitelist = null;
 Quill.register(Size, true);
-const urlDoc = "http://localhost:8080/doc";
+const urlDoc = "/doc";
 var idApre;
 
 let conteudoInicial = "";
@@ -159,8 +159,8 @@ function exibirErro(mensagem) {
 async function carregarMembrosApresentacao(id) {
     if (!id) return;
     try {
-        const respMembros = await fetch("http://localhost:8080/apimembro/get-membro");
-        const respVinculados = await fetch(`http://localhost:8080/apresentacao/membros-vinculados?id=${id}`);
+        const respMembros = await fetch("/apimembro/get-membro");
+        const respVinculados = await fetch(`/apresentacao/membros-vinculados?id=${id}`);
         
         if (respMembros.ok && respVinculados.ok) {
             const todosMembros = await respMembros.json();

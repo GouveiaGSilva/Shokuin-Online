@@ -20,7 +20,7 @@ async function cadastrarInstrumento(event) {
         let nome = document.getElementById("nomeInstrumento").value;
         let flag = await validaInstrumento(nome);
         if (flag) {
-            await fetch("http://localhost:8080/apiInstrumento/cadastroInstrumento", requestOptions)
+            await fetch("/apiInstrumento/cadastroInstrumento", requestOptions)
                 .then(resp => {
                     if (resp.ok)
                         return resp.json()
@@ -39,7 +39,7 @@ async function cadastrarInstrumento(event) {
 
 async function validaInstrumento(nome) {
     let validacao = true;
-    await fetch("http://localhost:8080/apiInstrumento/getAllInstrumentos")
+    await fetch("/apiInstrumento/getAllInstrumentos")
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -56,7 +56,7 @@ async function validaInstrumento(nome) {
 
 async function getInstrumentoByNome(nome) {
     let instrumento
-    await fetch("http://localhost:8080/apiInstrumento/getInstrumentosNome?nome=" + nome)
+    await fetch("/apiInstrumento/getInstrumentosNome?nome=" + nome)
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -68,7 +68,7 @@ async function getInstrumentoByNome(nome) {
 }
 
 function procuraFornecedores() {
-    fetch("http://localhost:8080/fornecedores/listar?keyword=")
+    fetch("/fornecedores/listar?keyword=")
         .then(response => {
             if (response.status === 200)
                 return response.json()
@@ -80,7 +80,7 @@ async function salvarImagem(instrunome, img) {
     const formData = new FormData();
     formData.append('imagem', img);
     formData.append('instru_nome', instrunome);
-    fetch("http://localhost:8080/apiInstrumento/salvarImg", { method: 'POST', body: formData, })
+    fetch("/apiInstrumento/salvarImg", { method: 'POST', body: formData, })
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -91,7 +91,7 @@ async function salvarImagem(instrunome, img) {
 }
 
 async function getNomeFornecedor(id) {
-    await fetch("http://localhost:8080/fornecedor/get-id?id=" + id)
+    await fetch("/fornecedor/get-id?id=" + id)
         .then(resp => {
             if (resp.ok)
                 resp.json()

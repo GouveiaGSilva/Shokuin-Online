@@ -22,7 +22,7 @@ function cadastroMusicas(){
 
     console.log(musica);
     // envio para o backend
-    fetch("http://localhost:8080/apimusica/cadmusicas", {
+    fetch("/apimusica/cadmusicas", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

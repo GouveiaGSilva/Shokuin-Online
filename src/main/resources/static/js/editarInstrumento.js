@@ -7,7 +7,7 @@ const urlParams = new URLSearchParams(queryString);
 let nome = urlParams.get('nome'); // "10"
 
 async function carregarInstrumento(nome){
-   await fetch("http://localhost:8080/apiInstrumento/listarInstrumentos?chave=")
+   await fetch("/apiInstrumento/listarInstrumentos?chave=")
         .then(response => {
             if (response.status === 200)
                 return response.json()
@@ -41,7 +41,7 @@ async function atualizarInstrumentos(){
         body: JSON.stringify(instrumento)}
     let flag = await validaInstrumento(nome)
     if(flag){
-        fetch("http://localhost:8080/apiInstrumento/atualizaInstrumento",requestOptions)
+        fetch("/apiInstrumento/atualizaInstrumento",requestOptions)
             .then(resp =>{
                 if(resp.ok)
                     return resp.json()
@@ -60,7 +60,7 @@ async function atualizarInstrumentos(){
 
 async function validaInstrumento(nome){
     let validacao = true;
-    await fetch("http://localhost:8080/apiInstrumento/listarInstrumentos?chave="+nome)
+    await fetch("/apiInstrumento/listarInstrumentos?chave="+nome)
         .then(resp =>{
             if (resp.ok)
                 return resp.json()
@@ -76,7 +76,7 @@ async function validaInstrumento(nome){
 }
 
 function procurarInstrumentos(nome) {
-    fetch("http://localhost:8080/apiInstrumento/listarInstrumentos?chave="+nome)
+    fetch("/apiInstrumento/listarInstrumentos?chave="+nome)
         .then(response => {
             if (response.status === 200)
                 return response.json()
@@ -111,7 +111,7 @@ else{
 }
 
 function procuraFornecedores() {
-    fetch("http://localhost:8080/apiFornecedor/listar-fornecedor")
+    fetch("/apiFornecedor/listar-fornecedor")
         .then(response => {
             if (response.status === 200)
                 return response.json()
@@ -131,7 +131,7 @@ function alimentaComboxF(json){
 
 async function getfornecedor(id){
     let fornecedor = null;
-    await fetch("http://localhost:8080/apiFornecedor/buscar-id?id="+id)
+    await fetch("/apiFornecedor/buscar-id?id="+id)
         .then(resp =>{
             if (resp.ok)
                 return resp.json()

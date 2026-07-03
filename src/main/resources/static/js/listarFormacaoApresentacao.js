@@ -6,7 +6,7 @@ localStorage.clear();
 
 async function carregarTudo() {
     try {
-        const resRepertorio = await fetch("http://localhost:8080/apirepertorio/get?idApresentacao=" + idApresentacao);
+        const resRepertorio = await fetch("/apirepertorio/get?idApresentacao=" + idApresentacao);
         if (!resRepertorio.ok)
             throw new Error(`Erro Repertório: HTTP ${resRepertorio.status}`);
         repertorio = await resRepertorio.json();

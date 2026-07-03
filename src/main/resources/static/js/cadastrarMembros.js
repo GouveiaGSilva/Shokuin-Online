@@ -37,7 +37,7 @@ function cadastrarMembro() {
         cargo: form.cargoId.value
     };
 
-    fetch("http://localhost:8080/apimembro/get-membro?keyword=")
+    fetch("/apimembro/get-membro?keyword=")
         .then(res => res.json())
         .then(membros => {
             const nomeExiste = membros.some(m => m.nome.trim().toLowerCase() === membro.nome.trim().toLowerCase());
@@ -52,7 +52,7 @@ function cadastrarMembro() {
                 return;
             }
 
-            fetch("http://localhost:8080/apimembro/cadmembro", {
+            fetch("/apimembro/cadmembro", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(membro)
@@ -96,7 +96,7 @@ function mostrarCargos() {
     const printarCadastro = document.getElementById("cargo");
     const printarEdicao = document.getElementById("editCargo");
 
-    fetch("http://localhost:8080/cargos/get-cargos?keyword=")
+    fetch("/cargos/get-cargos?keyword=")
         .then(resposta => { return resposta.json(); })
         .then(dados => {
             let comboboxHtmlCad = `

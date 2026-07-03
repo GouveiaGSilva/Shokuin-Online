@@ -1,6 +1,6 @@
 
 function listarInstrumentos() {
-    fetch("http://localhost:8080/apiInstrumento/getAllInstrumentos")
+    fetch("/apiInstrumento/getAllInstrumentos")
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -66,7 +66,7 @@ function alimentaCombox(listaFornecedores) {
 
 function buscarInstrumentos() {
     let chave = document.getElementById("busca").value;
-    fetch("http://localhost:8080/apiInstrumento/listarInstrumentos?chave=" + chave)
+    fetch("/apiInstrumento/listarInstrumentos?chave=" + chave)
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -78,7 +78,7 @@ function buscarInstrumentos() {
 }
 
 function abrirModalCadastrar() {
-    fetch("http://localhost:8080/fornecedores/listar?keyword=")
+    fetch("/fornecedores/listar?keyword=")
         .then(response => {
             if (response.status === 200)
                 return response.json()
@@ -118,7 +118,7 @@ async function cadastrarInstrumento(event) {
         let nome = f.instrumentos.value;
         let flag = await validaInstrumento(nome);
         if (flag) {
-            await fetch("http://localhost:8080/apiInstrumento/cadastroInstrumento", requestOptions)
+            await fetch("/apiInstrumento/cadastroInstrumento", requestOptions)
                 .then(resp => {
                     if (resp.ok)
                         return resp.json()
@@ -136,7 +136,7 @@ async function cadastrarInstrumento(event) {
 }
 async function validaInstrumento(nome) {
     let validacao = true;
-    await fetch("http://localhost:8080/apiInstrumento/getAllInstrumentos")
+    await fetch("/apiInstrumento/getAllInstrumentos")
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -153,7 +153,7 @@ async function validaInstrumento(nome) {
 
 async function validaInstrumentoAtualizar(nome, id) {
     let validacao = true;
-    await fetch("http://localhost:8080/apiInstrumento/getAllInstrumentos")
+    await fetch("/apiInstrumento/getAllInstrumentos")
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -171,7 +171,7 @@ async function salvarImagem(instrunome, img) {
     const formData = new FormData();
     formData.append('imagem', img);
     formData.append('instru_nome', instrunome);
-    fetch("http://localhost:8080/apiInstrumento/salvarImg", { method: 'POST', body: formData, })
+    fetch("/apiInstrumento/salvarImg", { method: 'POST', body: formData, })
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -245,7 +245,7 @@ async function atualizarInstrumento(event, id, img) {
         instrumento.instru_img = nomeImgCompleto;
     }
 
-    await fetch(`http://localhost:8080/apiInstrumento/atualizaInstrumento`, {
+    await fetch(`/apiInstrumento/atualizaInstrumento`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -271,7 +271,7 @@ async function atualizarInstrumento(event, id, img) {
     }
 }
 async function abrirModalAtualizar(id) {
-    await fetch("http://localhost:8080/fornecedores/listar?keyword=")
+    await fetch("/fornecedores/listar?keyword=")
         .then(response => {
             if (response.status === 200)
                 return response.json()
@@ -279,7 +279,7 @@ async function abrirModalAtualizar(id) {
                         document.getElementById("opFornecedoresAt").innerHTML = alimentaCombox(data);
                     });
         });
-    fetch("http://localhost:8080/apiInstrumento/getInstrumentos?id=" + id)
+    fetch("/apiInstrumento/getInstrumentos?id=" + id)
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -344,7 +344,7 @@ function abrirModalExclusao(id,instrumento,img){
     modal.show();
 }
 function excluirInstrumento(id) {
-    fetch("http://localhost:8080/apiInstrumento/excluir-id?id=" + id, {
+    fetch("/apiInstrumento/excluir-id?id=" + id, {
         method: "DELETE"
     })
         .then(resp => {

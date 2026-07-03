@@ -306,7 +306,7 @@ function insereTexto() {
 }
 
 function inserirInstrumento(id) {
-    fetch("http://localhost:8080/apiInstrumento/getInstrumentos?id=" + id)
+    fetch("/apiInstrumento/getInstrumentos?id=" + id)
         .then(resp => {
             if (resp.ok)
                 return resp.json()
@@ -376,7 +376,7 @@ async function montarAuxiliares() {
 async function listarInstrumentos() {
     try {
         // Busca TODOS (incluindo inativos) para popular o catálogo e não quebrar formações antigas
-        const respTodos = await fetch("http://localhost:8080/apiInstrumento/getAllInstrumentosIncludeInactive");
+        const respTodos = await fetch("/apiInstrumento/getAllInstrumentosIncludeInactive");
         if (!respTodos.ok) throw new Error("Erro ao buscar todos instrumentos");
         let dataTodos = await respTodos.json();
         
@@ -391,7 +391,7 @@ async function listarInstrumentos() {
         });
 
         // Busca APENAS OS ATIVOS para renderizar a barra de ferramentas
-        const respAtivos = await fetch("http://localhost:8080/apiInstrumento/getAllInstrumentos");
+        const respAtivos = await fetch("/apiInstrumento/getAllInstrumentos");
         if (!respAtivos.ok) throw new Error("Erro ao buscar instrumentos ativos");
         let dataAtivos = await respAtivos.json();
         
@@ -410,7 +410,7 @@ async function listarInstrumentos() {
 
 async function listarParticipantes() {
     try {
-        const resp = await fetch("http://localhost:8080/apimembro/get-membro");
+        const resp = await fetch("/apimembro/get-membro");
         if (!resp.ok)
             throw new Error("Erro ao buscar participantes");
         listaMembrosGlobal = await resp.json();
@@ -486,7 +486,7 @@ let listaMusicasGlobal = [];
 
 async function listarMusicas() {
     try {
-        const resp = await fetch("http://localhost:8080/apimusica/pesquisarmusica?nome= ");
+        const resp = await fetch("/apimusica/pesquisarmusica?nome= ");
         if (!resp.ok)
             throw new Error("Erro ao buscar músicas");
         const data = await resp.json();
@@ -681,7 +681,7 @@ async function salvarFormacao() {
         formData.append("imagem", blob, nomeArquivo);
 
         try {
-            const uploadResp = await fetch('http://localhost:8080/formacao/salvarImg', {
+            const uploadResp = await fetch('/formacao/salvarImg', {
                 method: 'POST',
                 body: formData
             });
@@ -699,11 +699,11 @@ async function salvarFormacao() {
             musi_id: musicaId > 0 ? { id: musicaId } : null,
             listaInstrumentos: await gerarListaInstrumentosFormacao(),
         };
-        let url = 'http://localhost:8080/formacao/salvar-formacao';
+        let url = '/formacao/salvar-formacao';
         let metodo = 'POST';
         if (idFormacaoAtual) {
             dadosFormacao.forma_id = idFormacaoAtual;
-            url = 'http://localhost:8080/formacao/atualizar-formacao';
+            url = '/formacao/atualizar-formacao';
             metodo = 'PUT';
         }
         fetch(url, { method: metodo, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dadosFormacao) })
@@ -719,7 +719,7 @@ async function salvarFormacao() {
                 if (!idFormacaoAtual) {
                     try {
                         const nomeCodificado = encodeURIComponent(titulo);
-                        const resp = await fetch(`http://localhost:8080/formacao/buscar-formacao-nome?nome=${nomeCodificado}`);
+                        const resp = await fetch(`/formacao/buscar-formacao-nome?nome=${nomeCodificado}`);
                         if (resp.ok) {
                             const data = await resp.json();
                             idFormacaoAtual = data.forma_id;
@@ -781,7 +781,7 @@ async function salvarInstrumentosFormacao() {
         };
 
         try {
-            const resp = await fetch('http://localhost:8080/formacao/salvar-instrumentos-formacao', {
+            const resp = await fetch('/formacao/salvar-instrumentos-formacao', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formacao)
@@ -1242,7 +1242,7 @@ function carregarJson(jsonString) {
 let listaFormacoesCache = [];
 
 function atualizarListaFormacoes() {
-    return fetch('http://localhost:8080/formacao/listar-todas')
+    return fetch('/formacao/listar-todas')
         .then(res => res.json())
         .then(lista => {
             listaFormacoesCache = lista;
@@ -1283,7 +1283,7 @@ function buscarFormacaoPorId(idSelecionado) {
         if (selectFormacoes) id = selectFormacoes.value;
     }
     if (id) {
-        fetch(`http://localhost:8080/formacao/buscar-formacao/${id}`)
+        fetch(`/formacao/buscar-formacao/${id}`)
             .then(res => res.json())
             .then(dados => {
                 idFormacaoAtual = dados.forma_id;
@@ -1309,7 +1309,7 @@ function buscarFormacaoPorId(idSelecionado) {
 
 async function buscarFormacaoPorParametroId(id) {
     try {
-        const res = await fetch(`http://localhost:8080/formacao/buscar-formacao/${id}`);
+        const res = await fetch(`/formacao/buscar-formacao/${id}`);
         if (!res.ok) {
             throw new Error(`Erro na requisição: Status ${res.status}`);
         }
@@ -1633,7 +1633,7 @@ async function carregarMembrosDaFormacao() {
         return;
     }
     try {
-        const resp = await fetch(`http://localhost:8080/api/membros-formacao/${idFormacaoAtual}`);
+        const resp = await fetch(`/api/membros-formacao/${idFormacaoAtual}`);
         if (resp.ok) {
             listaMembrosFormacao = await resp.json();
             atualizarPainelParticipantes();
@@ -1711,7 +1711,7 @@ async function salvarSelecaoMembrosNoBanco() {
     if (!idFormacaoAtual) return;
     const idsSelecionados = listaMembrosFormacao.map(m => m.id);
     try {
-        await fetch(`http://localhost:8080/api/membros-formacao/salvar?idFormacao=${idFormacaoAtual}`, {
+        await fetch(`/api/membros-formacao/salvar?idFormacao=${idFormacaoAtual}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(idsSelecionados)

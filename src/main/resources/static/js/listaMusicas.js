@@ -2,7 +2,7 @@ let listaMusicas = [];
 
 // Carrega músicas
 function carregarMusicas() {
-    fetch("http://localhost:8080/apimusica/listamusicas")
+    fetch("/apimusica/listamusicas")
         .then(response => response.json())
         .then(data => {
             listaMusicas = data;
@@ -35,7 +35,7 @@ function renderizarTabela(lista) {
 function filtrarMusicas() {
     const termo = document.getElementById("busca").value.toLowerCase();
     if (termo !== "") {
-        fetch(`http://localhost:8080/apimusica/pesquisarmusica?nome=${encodeURIComponent(termo)}`, {
+        fetch(`/apimusica/pesquisarmusica?nome=${encodeURIComponent(termo)}`, {
             method: "GET",
             headers: {
                 Accept: "application/json"
@@ -57,7 +57,7 @@ function filtrarMusicas() {
 function deletarMusica(id) {
     //alert(id);
     if (confirm("Tem certeza que deseja excluir?")) {
-        fetch(`http://localhost:8080/apimusica/deletarmusica/${id}`, {
+        fetch(`/apimusica/deletarmusica/${id}`, {
             method: "DELETE"
         })
             .then(response => {
@@ -88,7 +88,7 @@ function atualizarMusica() {
         compositor: document.getElementById("editCompositor").value.trim()
     };
 
-    fetch(`http://localhost:8080/apimusica/atualizarmusica`, {
+    fetch(`/apimusica/atualizarmusica`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -126,7 +126,7 @@ function adicionarMusica() {
 
     console.log(musica);
     // envio para o backend
-    fetch("http://localhost:8080/apimusica/cadmusicas", {
+    fetch("/apimusica/cadmusicas", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

@@ -17,7 +17,7 @@ function atualizarMusica() {
         compositor: document.getElementById("compositor").value.trim()
     };
 
-    fetch(`http://localhost:8080/apimusica/atualizarmusica`, {
+    fetch(`/apimusica/atualizarmusica`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

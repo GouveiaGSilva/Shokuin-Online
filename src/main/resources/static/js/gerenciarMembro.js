@@ -1,5 +1,5 @@
 const form = document.forms[0];
-const url = "http://localhost:8080/"
+const url = "/"
 const pesquisa = document.getElementById("pesquisar");
 const btPesquisar = document.getElementById("btPesquisar");
 if(pesquisa != null)
@@ -105,7 +105,7 @@ function excluirMembro(id){
         body: JSON.stringify(membro)
     };
 
-    fetch(`http://localhost:8080/apimembro/excluirMembro/${id}`, data)
+    fetch(`/apimembro/excluirMembro/${id}`, data)
         .then(resp => {
             if(resp.ok){
                 constroiTabela("");

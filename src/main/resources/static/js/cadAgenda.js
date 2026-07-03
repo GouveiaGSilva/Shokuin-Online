@@ -72,7 +72,7 @@ function cadastrarAgenda() {
     params.append('complemento', complemento);
     params.append('idApresentacao', idApresentacao);
 
-    fetch("http://localhost:8080/apiagenda/cadagenda", {
+    fetch("/apiagenda/cadagenda", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"

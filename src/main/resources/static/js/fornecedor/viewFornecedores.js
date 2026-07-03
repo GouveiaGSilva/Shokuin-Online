@@ -1,4 +1,4 @@
-const url = "http://localhost:8080/";
+const url = "/";
 const form = document.forms[0];
 const pesquisa = document.getElementById("pesquisar");
 

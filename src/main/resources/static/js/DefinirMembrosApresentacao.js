@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function carregarMembros() {
     try {
-        const respMembros = await fetch("http://localhost:8080/apimembro/get-membro");
+        const respMembros = await fetch("/apimembro/get-membro");
         if (respMembros.ok) {
             todosMembros = await respMembros.json();
         }
-        const respVinculados = await fetch(`http://localhost:8080/apresentacao/membros-vinculados?id=${idApresentacao}`);
+        const respVinculados = await fetch(`/apresentacao/membros-vinculados?id=${idApresentacao}`);
         if (respVinculados.ok) {
             membrosVinculados = await respVinculados.json();
         }
@@ -75,7 +75,7 @@ async function salvarParticipantes() {
     const checkboxes = document.querySelectorAll('.chk-membro:checked');
     const selecionados = Array.from(checkboxes).map(chk => parseInt(chk.value));
     try {
-        const response = await fetch(`http://localhost:8080/apresentacao/salvar-membros?id=${idApresentacao}`, {
+        const response = await fetch(`/apresentacao/salvar-membros?id=${idApresentacao}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

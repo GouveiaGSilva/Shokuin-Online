@@ -4,7 +4,7 @@ let nomeAntigoMemoria = "";
 
 // 1. Carregar Membros
 function carregarMembros() {
-    fetch("http://localhost:8080/apimembro/get-membro?keyword=")
+    fetch("/apimembro/get-membro?keyword=")
         .then(response => {
             if (!response.ok) throw new Error("Erro ao buscar membros");
             return response.json();
@@ -79,7 +79,7 @@ function filtrarMembros() {
     const termo = document.getElementById("busca").value.trim();
 
     if (termo !== "") {
-        fetch(`http://localhost:8080/apimembro/get-membro?keyword=${encodeURIComponent(termo)}`, {
+        fetch(`/apimembro/get-membro?keyword=${encodeURIComponent(termo)}`, {
             method: "GET",
             headers: {
                 Accept: "application/json"
@@ -101,7 +101,7 @@ function filtrarMembros() {
 // 4. Deletar Membro
 function deletarMembro(id) {
     if (confirm("Tem certeza que deseja excluir este membro?")) {
-        fetch(`http://localhost:8080/apimembro/excluirMembro/${id}`, {
+        fetch(`/apimembro/excluirMembro/${id}`, {
             method: "DELETE"
         })
             .then(response => {
@@ -121,7 +121,7 @@ function deletarMembro(id) {
 // 6. CARREGAR E ATUALIZAR EDIÇÃO (PUT)
 // ==========================================
 function carregaAtualiza(id) {
-    fetch(`http://localhost:8080/apimembro/get-membro/${id}`)
+    fetch(`/apimembro/get-membro/${id}`)
         .then(response => {
             if (!response.ok) throw new Error("Erro ao buscar membro por ID");
             return response.json();
@@ -235,7 +235,7 @@ function atualizarMembro() {
         experiencia: parseInt(document.getElementById("editExperiencia").value)
     };
 
-    fetch("http://localhost:8080/apimembro/get-membro?keyword=")
+    fetch("/apimembro/get-membro?keyword=")
         .then(res => res.json())
         .then(membros => {
             const nomeExiste = membros.some(m => m.id !== membroOriginal.id && m.nome.trim().toLowerCase() === membroAtualizado.nome.trim().toLowerCase());
@@ -250,7 +250,7 @@ function atualizarMembro() {
                 return;
             }
 
-            fetch(`http://localhost:8080/apimembro/atualizarMembro`, {
+            fetch(`/apimembro/atualizarMembro`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(membroAtualizado)

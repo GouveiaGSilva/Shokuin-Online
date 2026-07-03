@@ -27,7 +27,7 @@ async function gerarPDFFormacoesApre(id) {
 
     try {
         // 1. Buscar o nome da apresentação
-        const respAp = await fetch("http://localhost:8080/apresentacao/get-byId?id="+id);
+        const respAp = await fetch("/apresentacao/get-byId?id="+id);
         let nomeApresentacao = "Apresentação";
         if (respAp.ok) {
             const dadosAp = await respAp.json();
@@ -35,7 +35,7 @@ async function gerarPDFFormacoesApre(id) {
         }
 
         // 2. Buscar o repertório da apresentação
-        const respRep = await fetch("http://localhost:8080/apirepertorio/get?idApresentacao=" + id);
+        const respRep = await fetch("/apirepertorio/get?idApresentacao=" + id);
         if (!respRep.ok) {
             alert("Não foi possível carregar o repertório desta apresentação.");
             if(dropdown) dropdown.style.display = "none";
@@ -79,7 +79,7 @@ async function gerarPDFFormacoesApre(id) {
 
             if (formacao && formacao.forma_img) {
                 try {
-                    const imgUrl = `http://localhost:8080/uploads/formacoes/${formacao.forma_img}`;
+                    const imgUrl = `/uploads/formacoes/${formacao.forma_img}`;
                     const imgBase64 = await converterImgParaBase64(imgUrl);
                     
                     // Ajusta a imagem mantendo a proporção. Largura máx: pageWidth - 30

@@ -33,7 +33,7 @@ function mostrarAgenda(agendaStringCodificada, agendaStatus){
 }
 
 async function carregarProximas() {
-    // fetch("http://localhost:8080/apiagenda/getproximasagendas")
+    // fetch("/apiagenda/getproximasagendas")
     //     .then(response => response.json())
     //     .then(data => {
     //         //console.log("Dados recebidos da API:", data);
@@ -42,8 +42,8 @@ async function carregarProximas() {
     //         renderizarAgendas(listaAgendasCompleta);
     //     })
     //     .catch(error => console.error("Erro:", error));
-    await fetch("http://localhost:8080/apiagenda/finalizar-agenda");
-    const response = await fetch("http://localhost:8080/apiagenda/getproximasagendas");
+    await fetch("/apiagenda/finalizar-agenda");
+    const response = await fetch("/apiagenda/getproximasagendas");
     if(response.ok){
         dataSelecionada = 'P';
         listaAgendasCompleta = await response.json();
@@ -66,7 +66,7 @@ function mascaraNumero(event) {
 
 function cancelarAgenda(){
     let id_apresentacao = agendaEditada.apresentacao ? agendaEditada.apresentacao.id : agendaEditada.idApresentacao;
-    fetch("http://localhost:8080/apiagenda/cancelaragenda?id=" + id_apresentacao, {
+    fetch("/apiagenda/cancelaragenda?id=" + id_apresentacao, {
         method: "PUT",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -109,7 +109,7 @@ function cancelarAgenda(){
 
 function excluirAgenda(){
     let id = agendaEditada.id;
-    fetch("http://localhost:8080/apiagenda/deletaragenda?id="+id, {
+    fetch("/apiagenda/deletaragenda?id="+id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -191,7 +191,7 @@ async function atualizarAgenda(){
     params.append('complemento', complemento);
     params.append('idApresentacao', idApresentacao);
 
-    fetch("http://localhost:8080/apiagenda/atualizaagenda", {
+    fetch("/apiagenda/atualizaagenda", {
         method: "PUT",
         body: params
     })
@@ -225,7 +225,7 @@ async function atualizarAgenda(){
 }
 
 async function carregarAgendasporData(dataSelecionada) {
-    // fetch(`http://localhost:8080/apiagenda/getagendapordia?dia=${dataSelecionada}`)
+    // fetch(`/apiagenda/getagendapordia?dia=${dataSelecionada}`)
     //     .then(response => response.json())
     //     .then(data => {
     //         //console.log("Dados recebidos da API:", data);
@@ -234,7 +234,7 @@ async function carregarAgendasporData(dataSelecionada) {
     //         renderizarAgendas(listaAgendas);
     //     })
     //     .catch(error => console.error("Erro:", error));
-    const response = await fetch(`http://localhost:8080/apiagenda/getagendapordia?dia=${dataSelecionada}`);
+    const response = await fetch(`/apiagenda/getagendapordia?dia=${dataSelecionada}`);
     if(response.ok){
         listaAgendas = await response.json();
         renderizarCalendario();
@@ -243,7 +243,7 @@ async function carregarAgendasporData(dataSelecionada) {
 }
 
 async function carregarAgendas() {
-    const response = await fetch("http://localhost:8080/apiagenda/getagenda")
+    const response = await fetch("/apiagenda/getagenda")
     if(response.ok){
         const data = await response.json();
         listaAgendasCompleta = data;

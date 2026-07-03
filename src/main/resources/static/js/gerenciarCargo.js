@@ -1,5 +1,5 @@
 const form = document.forms[0];
-const url = "http://localhost:8080/"
+const url = "/"
 const pesquisa = document.getElementById("pesquisar");
 if(pesquisa != null){
     pesquisa.addEventListener("keyup", pesquisarCargos);

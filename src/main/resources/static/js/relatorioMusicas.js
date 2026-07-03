@@ -15,7 +15,7 @@ function baixarRelatorioPdf(flag) {
     params.append('dataFim',dataFim);
     let listaRelatorio = [];
     if(flag) {
-        fetch(`http://localhost:8080/apirelmusica/listamusicas/maistocadas/pordata?${params.toString()}`, {
+        fetch(`/apirelmusica/listamusicas/maistocadas/pordata?${params.toString()}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'
@@ -42,7 +42,7 @@ function baixarRelatorioPdf(flag) {
                 myModal.show();
             })
     }else{
-        fetch(`http://localhost:8080/apirelmusica/listamusicas/10maistocadas/pordata?${params.toString()}`, {
+        fetch(`/apirelmusica/listamusicas/10maistocadas/pordata?${params.toString()}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'

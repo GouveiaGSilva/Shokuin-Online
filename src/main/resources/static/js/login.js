@@ -8,7 +8,7 @@ document.getElementById('form-login').addEventListener('submit', async function 
     alerta.classList.add('d-none');
 
     try {
-        const url = `http://localhost:8080/apiautenticacao/login?usuario=${encodeURIComponent(usuario)}&senha=${encodeURIComponent(senha)}`;
+        const url = `/apiautenticacao/login?usuario=${encodeURIComponent(usuario)}&senha=${encodeURIComponent(senha)}`;
         const response = await fetch(url, {
             method: 'POST'
         });

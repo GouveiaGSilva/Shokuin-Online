@@ -11,9 +11,9 @@
 
 async function carregarHome() {
     try {
-        const response = await fetch("http://localhost:8080/apiautenticacao/usuario-atual");
+        const response = await fetch("/apiautenticacao/usuario-atual");
         if (response.status === 401) {
-            window.location.href = "http://localhost:8080/login.html";
+            window.location.href = "/login.html";
             return;
         }
         if (!response.ok) {
@@ -294,13 +294,13 @@ function abrirModalLogout() {
 
 async function confirmarSairDoSistema() {
     try {
-        await fetch("http://localhost:8080/apiautenticacao/logout", {
+        await fetch("/apiautenticacao/logout", {
             method: "POST"
         });
-        window.location.href = "http://localhost:8080/login.html";
+        window.location.href = "/login.html";
     } catch (error) {
         console.error("Erro ao efetuar o logout no servidor:", error);
-        window.location.href = "http://localhost:8080/login.html";
+        window.location.href = "/login.html";
     }
 }
 

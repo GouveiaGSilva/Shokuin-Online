@@ -1,7 +1,7 @@
 const mesesAbrev = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-const urlAgendas = "http://localhost:8080/apiagenda/getagenda";
-const urlRepertorio = "http://localhost:8080/apirepertorio/get";
-const urlIntegrantes = "http://localhost:8080/apresentacao/membro-vinculados";
+const urlAgendas = "/apiagenda/getagenda";
+const urlRepertorio = "/apirepertorio/get";
+const urlIntegrantes = "/apresentacao/membro-vinculados";
 const SRC_LOGO_SHOKUIN = "img/dantaiFenix.png";
 
 let todasAgendas = [];
@@ -230,14 +230,14 @@ async function abrirPrevia(idAgenda, idApresentacao) {
                 let tocadoresFormacao = [];
                 if(idFormacao){
                     try{
-                        const respTocadores = await fetch("http://localhost:8080/formacao/get-tocadores?idFormacao="+idFormacao);
+                        const respTocadores = await fetch("/formacao/get-tocadores?idFormacao="+idFormacao);
                         if(respTocadores.ok){
                             tocadoresFormacao = await respTocadores.json();
                         }
                     }catch(e){console.error(e)}
                 }
 
-                const srcImagem = base64Img ? `http://localhost:8080/uploads/formacoes/${base64Img}` : "/img/Formação_Generica.png";
+                const srcImagem = base64Img ? `/uploads/formacoes/${base64Img}` : "/img/Formação_Generica.png";
                 htmlPDF += `
                     <div class="mb-4 p-3 bg-white rounded border" style="border-color: #dee2e6 !important;">
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
@@ -398,13 +398,13 @@ async function baixarPDF(idAgenda, idApresentacao) {
                     let tocadoresFormacao = [];
                     if(idFormacao){
                         try{
-                            const respTocadores = await fetch("http://localhost:8080/formacao/get-tocadores?idFormacao="+idFormacao);
+                            const respTocadores = await fetch("/formacao/get-tocadores?idFormacao="+idFormacao);
                             if(respTocadores.ok){
                                 tocadoresFormacao = await respTocadores.json();
                             }
                         }catch(e){console.error(e)}
                     }
-                    const srcImagem = base64Img ? `http://localhost:8080/uploads/formacoes/${base64Img}` : "/img/Formação_Generica.png";
+                    const srcImagem = base64Img ? `/uploads/formacoes/${base64Img}` : "/img/Formação_Generica.png";
 
                     htmlPDF += `
                         <div class="mb-4 p-3 bg-white rounded border" style="border-color: #dee2e6 !important; background-color: #ffffff !important; page-break-inside: avoid;">

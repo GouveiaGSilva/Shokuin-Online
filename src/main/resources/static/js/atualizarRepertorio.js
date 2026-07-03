@@ -16,18 +16,18 @@ let listaFormacao = [];
 async function carregarTudo() {
     try {
 
-        const resMusicas = await fetch("http://localhost:8080/apimusica/listamusicas");
+        const resMusicas = await fetch("/apimusica/listamusicas");
         if (!resMusicas.ok)
             throw new Error(`Erro Músicas: HTTP ${resMusicas.status}`);
         listaMusica = await resMusicas.json();
 
-        const resFormacoes = await fetch("http://localhost:8080/formacao/listar-todas");
+        const resFormacoes = await fetch("/formacao/listar-todas");
         if (!resFormacoes.ok)
             throw new Error(`Erro Formações: HTTP ${resFormacoes.status}`);
         listaFormacao = await resFormacoes.json();
 
 
-        const resRepertorio = await fetch("http://localhost:8080/apirepertorio/get?idApresentacao=" + idApresentacao);
+        const resRepertorio = await fetch("/apirepertorio/get?idApresentacao=" + idApresentacao);
         if (!resRepertorio.ok)
             throw new Error(`Erro Repertório: HTTP ${resRepertorio.status}`);
         repertorio = await resRepertorio.json();
@@ -173,7 +173,7 @@ function atualizarRepertorio() {
         params.append('idApresentacao', idApresentacao);
         listaidMusica.forEach(id => params.append('listaMusica', id));
         listaidFormacao.forEach(id => params.append('listaFormacao', id));
-        fetch("http://localhost:8080/apirepertorio/atualizarepertorio", {
+        fetch("/apirepertorio/atualizarepertorio", {
             method: "PUT",
             body: params
         })

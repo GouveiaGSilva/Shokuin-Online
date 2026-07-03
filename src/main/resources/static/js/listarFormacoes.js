@@ -1,5 +1,5 @@
 function atualizarListaFormacoes() {
-    fetch('http://localhost:8080/formacao/listar-todas')
+    fetch('/formacao/listar-todas')
         .then(res => res.json())
         .then(lista => {
             listaFormacoes = lista;
@@ -102,7 +102,7 @@ function excluirFormacao(id) {
         method: "DELETE", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formacao)
     };
-    fetch("http://localhost:8080/formacao/excluir-id", data)
+    fetch("/formacao/excluir-id", data)
         .then(resp => {
             if (resp.ok) {
                 atualizarListaFormacoes();
@@ -156,7 +156,7 @@ let canvasOculto = null;
 
 async function carregarCatalogoInstrumentos() {
     try {
-        const resp = await fetch("http://localhost:8080/apiInstrumento/getAllInstrumentosIncludeInactive");
+        const resp = await fetch("/apiInstrumento/getAllInstrumentosIncludeInactive");
         if (!resp.ok) throw new Error("Erro ao buscar instrumentos");
         let data = await resp.json();
 
@@ -366,7 +366,7 @@ async function atualizarTodasCapas() {
 
         try {
             // Busca a formação completa porque listarTodas não traz o JSON do palco
-            const respCompleta = await fetch(`http://localhost:8080/formacao/buscar-formacao/${formacao.forma_id}`);
+            const respCompleta = await fetch(`/formacao/buscar-formacao/${formacao.forma_id}`);
             if (!respCompleta.ok) {
                 console.error("Falha ao buscar detalhes da formação", formacao.forma_nome);
                 continue;
@@ -386,7 +386,7 @@ async function atualizarTodasCapas() {
                 formData.append("forma_img", nomeArquivoImg);
                 formData.append("imagem", blob, nomeArquivoImg);
 
-                const responseImg = await fetch('http://localhost:8080/formacao/salvarImg', {
+                const responseImg = await fetch('/formacao/salvarImg', {
                     method: 'POST',
                     body: formData
                 });
@@ -397,7 +397,7 @@ async function atualizarTodasCapas() {
 
                     formacaoCompleta.forma_img = nomeRealImg;
 
-                    const responseUpd = await fetch('http://localhost:8080/formacao/atualizar-formacao', {
+                    const responseUpd = await fetch('/formacao/atualizar-formacao', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formacaoCompleta)

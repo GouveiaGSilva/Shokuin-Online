@@ -4,7 +4,7 @@ let listaAgendas = [];
 
 async function carregarProximas() {
     try {
-        const resposta = await fetch("http://localhost:8080/apiagenda/getproximasagendas");
+        const resposta = await fetch("/apiagenda/getproximasagendas");
         if (!resposta.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
@@ -88,7 +88,7 @@ function renderizarAgendas(listaAgendas) {
 
 async function carregarContadorMusica() {
     try {
-        const response = await fetch("http://localhost:8080/apimusica/quantidademusicas");
+        const response = await fetch("/apimusica/quantidademusicas");
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
@@ -113,7 +113,7 @@ async function carregarContadorMusica() {
 
 async function carregarContadorMembro() {
     try {
-        const response = await fetch("http://localhost:8080/apimembro/quantidademembros");
+        const response = await fetch("/apimembro/quantidademembros");
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }

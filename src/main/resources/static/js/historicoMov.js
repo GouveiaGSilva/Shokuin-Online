@@ -1,5 +1,5 @@
 var tabela = document.getElementById("tabela");
-const url = "http://localhost:8080/";
+const url = "/";
 var dataIni = document.getElementById("dataIni");
 var dataFim = document.getElementById("dataFim");
 var tipo = document.getElementById("tipo");

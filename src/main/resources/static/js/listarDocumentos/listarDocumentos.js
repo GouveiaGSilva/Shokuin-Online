@@ -1,4 +1,4 @@
-const urlDoc = "http://localhost:8080/doc";
+const urlDoc = "/doc";
 let listaDocs = [];
 
 async function listarDocumentos() {
