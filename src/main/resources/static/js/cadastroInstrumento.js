@@ -6,14 +6,25 @@ async function cadastrarInstrumento(event) {
         event.preventDefault();
         event.stopPropagation();
         const f = document.forms[0]
-        let nomeImg = f.imagem.files[0].name;
-        let extensao = nomeImg.split('.').pop();
+        
+        let file = f.imagem && f.imagem.files && f.imagem.files.length > 0 ? f.imagem.files[0] : null;
+        let base64Img = null;
+        
+        if (file) {
+            base64Img = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(e);
+                reader.readAsDataURL(file);
+            });
+        }
+
         const fornecedor = {
             id: parseInt(f.fornecedor.value)
         }
         const instrumentos = {
             instru_nome: f.nomeInstrumento.value,
-            instru_img: f.nomeInstrumento.value + "." + extensao,
+            instru_img: base64Img,
             fornecedor: fornecedor,
         }
         const requestOptions = { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(instrumentos) };
@@ -25,7 +36,6 @@ async function cadastrarInstrumento(event) {
                     if (resp.ok)
                         return resp.json()
                             .then(data => {
-                                salvarImagem(instrumentos.instru_img, f.imagem.files[0]);
                                 abrirModalConfirmacao(data.instru_nome);
                                 document.getElementById("formInstrumento").reset();
                             })
@@ -76,19 +86,7 @@ function procuraFornecedores() {
         })
 }
 
-async function salvarImagem(instrunome, img) {
-    const formData = new FormData();
-    formData.append('imagem', img);
-    formData.append('instru_nome', instrunome);
-    fetch("/apiInstrumento/salvarImg", { method: 'POST', body: formData, })
-        .then(resp => {
-            if (resp.ok)
-                return resp.json()
-                    .then(data => {
-                        console.log(data);
-                    })
-        })
-}
+
 
 async function getNomeFornecedor(id) {
     await fetch("/fornecedor/get-id?id=" + id)
