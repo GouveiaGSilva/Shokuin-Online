@@ -312,9 +312,11 @@ function inserirInstrumento(id) {
                 return resp.json()
                     .then(data => {
 
-                        let nomeArquivo = data.instru_img;
-                        let extensao = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
-                        if (extensao === "svg")
+                        let isSvg = false;
+                        if (data.instru_img && data.instru_img.startsWith("data:image/svg+xml")) {
+                            isSvg = true;
+                        }
+                        if (isSvg)
                             insereSvg(data)
                         else
                             insereImagem(data)
@@ -325,9 +327,9 @@ function inserirInstrumento(id) {
         })
 }
 function insereSvg(instrumento) {
-    const path = "/uploads/" + instrumento.instru_img + "?v=" + Date.now();
+    const dataUrlImg = instrumento.instru_img;
 
-    fabric.loadSVGFromURL(path, function (objects, options) {
+    fabric.loadSVGFromURL(dataUrlImg, function (objects, options) {
         var svgData = fabric.util.groupSVGElements(objects, options);
         const inputZoom = document.getElementById('inputFatorZoom');
         const fatorZoom = inputZoom ? parseFloat(inputZoom.value) : 0.2;
@@ -348,9 +350,9 @@ function insereSvg(instrumento) {
 }
 
 function insereImagem(instrumento) {
-    const path = "/uploads/" + instrumento.instru_img + "?v=" + Date.now();
+    const dataUrlImg = instrumento.instru_img;
 
-    fabric.Image.fromURL(path, function (img) {
+    fabric.Image.fromURL(dataUrlImg, function (img) {
         const inputZoom = document.getElementById('inputFatorZoom');
         const fatorZoom = inputZoom ? parseFloat(inputZoom.value) : 0.3;
         img.set({
@@ -671,31 +673,12 @@ async function salvarFormacao() {
             multiplier: 1
         });
 
-        // Converter DataURL para Blob
-        const resData = await fetch(dataURL);
-        const blob = await resData.blob();
-        const nomeArquivo = `forma_${Date.now()}.jpeg`;
 
-        const formData = new FormData();
-        formData.append("forma_img", nomeArquivo);
-        formData.append("imagem", blob, nomeArquivo);
-
-        try {
-            const uploadResp = await fetch('/formacao/salvarImg', {
-                method: 'POST',
-                body: formData
-            });
-            if (!uploadResp.ok) {
-                console.error("Erro ao fazer upload da imagem.");
-            }
-        } catch (e) {
-            console.error("Exceção ao fazer upload da imagem:", e);
-        }
 
         const dadosFormacao = {
             forma_nome: titulo,
             forma_instrumentos: gerarJson(),
-            forma_img: nomeArquivo,
+            forma_img: dataURL,
             musi_id: musicaId > 0 ? { id: musicaId } : null,
             listaInstrumentos: await gerarListaInstrumentosFormacao(),
         };
@@ -1081,11 +1064,13 @@ function reconstruirInstrumento(dados) {
         return;
     }
 
-    const path = "/uploads/" + infoBanco.instru_img + "?v=" + Date.now();
-    let nomeArquivo = infoBanco.instru_img;
-    let extensao = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
-    if (extensao === "svg") {
-        fabric.loadSVGFromURL(path, function (objects, options) {
+    let dataUrlImg = infoBanco.instru_img;
+    let isSvg = false;
+    if (dataUrlImg && dataUrlImg.startsWith("data:image/svg+xml")) {
+        isSvg = true;
+    }
+    if (isSvg) {
+        fabric.loadSVGFromURL(dataUrlImg, function (objects, options) {
             var svgData = fabric.util.groupSVGElements(objects, options);
             svgData.set({
                 left: dados.left,
@@ -1134,7 +1119,7 @@ function reconstruirInstrumento(dados) {
         });
     }
     else {
-        fabric.Image.fromURL(path, function (img) {
+        fabric.Image.fromURL(dataUrlImg, function (img) {
             img.set({
                 left: dados.left,
                 top: dados.top,

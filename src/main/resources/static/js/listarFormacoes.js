@@ -25,7 +25,7 @@ function renderizar(lista) {
         let statusBadge = '';
 
         // Tenta buscar a imagem salva no Banco (forma_img)
-        const previewSalvo = item.forma_img ? `/uploads/formacoes/${item.forma_img}` : null;
+        const previewSalvo = item.forma_img ? `${item.forma_img}` : null;
 
         let imgTop = '';
         if (previewSalvo) {
@@ -118,11 +118,10 @@ function deletarFormacao(id, nome, img) {
     botao.setAttribute("onclick", "excluirFormacao('" + id + "')");
 
     const mensagem = document.getElementById("confirmMessage");
-    let imgHtml = "";
     if (img) {
         imgHtml = `
         <div class="mt-3 text-center">
-            <img src="/uploads/formacoes/${img}" class="img-fluid rounded border" style="max-height: 120px; object-fit: contain;">
+            <img src="${img}" class="img-fluid rounded border" style="max-height: 120px; object-fit: contain;">
         </div>`;
     }
 
@@ -231,9 +230,11 @@ function processarInstrumentoOculto(dados, canvas) {
             return;
         }
 
-        const path = "/uploads/" + infoBanco.instru_img;
-        let nomeArquivo = infoBanco.instru_img;
-        let extensao = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
+        let dataUrlImg = infoBanco.instru_img;
+        let isSvg = false;
+        if (dataUrlImg && dataUrlImg.startsWith("data:image/svg+xml")) {
+            isSvg = true;
+        }
 
         const applyProperties = (obj) => {
             obj.set({
@@ -262,14 +263,14 @@ function processarInstrumentoOculto(dados, canvas) {
             }
         };
 
-        if (extensao === "svg") {
-            fabric.loadSVGFromURL(path, function (objects, options) {
+        if (isSvg) {
+            fabric.loadSVGFromURL(dataUrlImg, function (objects, options) {
                 var svgData = fabric.util.groupSVGElements(objects, options);
                 applyProperties(svgData);
                 resolve();
             });
         } else {
-            fabric.Image.fromURL(path, function (img) {
+            fabric.Image.fromURL(dataUrlImg, function (img) {
                 applyProperties(img);
                 resolve();
             });
@@ -376,36 +377,16 @@ async function atualizarTodasCapas() {
             if (formacaoCompleta.forma_instrumentos) {
                 const dataUrl = await renderizarFormacaoParaImagem(formacaoCompleta.forma_instrumentos);
 
-                // Fetch native blob conversion
-                const resData = await fetch(dataUrl);
-                const blob = await resData.blob();
+                formacaoCompleta.forma_img = dataUrl;
 
-                const nomeArquivoImg = `forma_${Date.now()}_${Math.floor(Math.random() * 1000)}.jpeg`;
-
-                const formData = new FormData();
-                formData.append("forma_img", nomeArquivoImg);
-                formData.append("imagem", blob, nomeArquivoImg);
-
-                const responseImg = await fetch('/formacao/salvarImg', {
-                    method: 'POST',
-                    body: formData
+                const responseUpd = await fetch('/formacao/atualizar-formacao', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formacaoCompleta)
                 });
 
-                if (responseImg.ok) {
-                    const imgUrl = await responseImg.text();
-                    const nomeRealImg = imgUrl.split('/').pop();
-
-                    formacaoCompleta.forma_img = nomeRealImg;
-
-                    const responseUpd = await fetch('/formacao/atualizar-formacao', {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(formacaoCompleta)
-                    });
-
-                    if (!responseUpd.ok) {
-                        console.error("Falha ao atualizar DB para", formacao.forma_nome);
-                    }
+                if (!responseUpd.ok) {
+                    console.error("Falha ao atualizar DB para", formacao.forma_nome);
                 }
             }
         } catch (err) {

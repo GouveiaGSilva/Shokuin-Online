@@ -14,7 +14,7 @@ async function construirTabela(lista) {
     let tabela = "";
     if (lista != null && lista.length > 0) {
         for (let estoque of lista) {
-            let imgSrc = estoque.instrumento.instru_img ? `uploads/${estoque.instrumento.instru_img}?v=${Date.now()}` : 'https://fjsp.org.br/wp-content/uploads/2020/10/taiko-c.jpg';
+            let imgSrc = estoque.instrumento.instru_img ? `${estoque.instrumento.instru_img}` : 'https://fjsp.org.br/wp-content/uploads/2020/10/taiko-c.jpg';
             tabela += `
             <div class="card shadow-sm border-0 w-100" style="border-left: 4px solid var(--taiko-gold); border-radius: 0.5rem; overflow: hidden; background-color: #ffffff;">
                 <div class="row g-0 align-items-center">
@@ -104,14 +104,19 @@ async function cadastrarInstrumento(event) {
         event.preventDefault();
         event.stopPropagation();
         const f = document.forms["formInstrumentoCad"];
-        let nomeImg = f.imagem.files[0].name;
-        let extensao = nomeImg.split('.').pop();
+        let base64Img = document.getElementById('imagePreview').src || null;
+        if (base64Img && base64Img.startsWith("data:")) {
+            // É base64 válido
+        } else {
+            base64Img = null;
+        }
+
         const fornecedor = {
             id: parseInt(f.fornecedor.value)
         }
         const instrumentos = {
             instru_nome: f.instrumentos.value,
-            instru_img: f.instrumentos.value + "." + extensao,
+            instru_img: base64Img,
             fornecedor: fornecedor,
         }
         const requestOptions = { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(instrumentos) };
@@ -123,7 +128,6 @@ async function cadastrarInstrumento(event) {
                     if (resp.ok)
                         return resp.json()
                             .then(data => {
-                                salvarImagem(instrumentos.instru_img, f.imagem.files[0]);
                                 abrirModalConfirmacaoCad(data.instru_nome);
                                 document.getElementById("formInstrumentoCad").reset();
                             })
@@ -167,19 +171,7 @@ async function validaInstrumentoAtualizar(nome, id) {
         })
     return validacao;
 }
-async function salvarImagem(instrunome, img) {
-    const formData = new FormData();
-    formData.append('imagem', img);
-    formData.append('instru_nome', instrunome);
-    fetch("/apiInstrumento/salvarImg", { method: 'POST', body: formData, })
-        .then(resp => {
-            if (resp.ok)
-                return resp.json()
-                    .then(data => {
-                        console.log(data);
-                    })
-        })
-}
+
 function abrirModalConfirmacaoCad(instrumento) {
     const modal = new bootstrap.Modal(document.getElementById('messageModal'));
     const mensagemSucesso = document.getElementById("mensagemSucesso");
@@ -221,13 +213,11 @@ async function atualizarInstrumento(event, id, img) {
     let flag = false;
     let idf = document.getElementById('opFornecedoresAt').value;
 
-    let imgInput = document.getElementById('imagemAt');
-    let nomeImgCompleto = null;
-    if (imgInput.files.length > 0) {
-        let nomeImg = imgInput.files[0].name;
-        let extensao = nomeImg.split('.').pop();
-        nomeImgCompleto = nome + "." + extensao;
-        salvarImagem(nomeImgCompleto, imgInput.files[0]);
+    let base64Img = document.getElementById('imagePreviewAt').src || null;
+    if (base64Img && base64Img.startsWith("data:")) {
+        // Já está base64
+    } else {
+        base64Img = img; // Mantém a antiga
     }
 
     const fornecedor = {
@@ -237,13 +227,9 @@ async function atualizarInstrumento(event, id, img) {
     const instrumento = {
         instru_id: id,
         instru_nome: nome,
-        instru_img: img,
+        instru_img: base64Img,
         fornecedor: fornecedor,
     };
-    
-    if (nomeImgCompleto) {
-        instrumento.instru_img = nomeImgCompleto;
-    }
 
     await fetch(`/apiInstrumento/atualizaInstrumento`, {
         method: "PUT",
@@ -293,7 +279,7 @@ async function abrirModalAtualizar(id) {
                         let imagePreviewAt = document.getElementById('imagePreviewAt');
 
                         if (data.instru_img && data.instru_img.trim() !== '') {
-                            imagePreviewAt.src = `uploads/${data.instru_img}?v=${Date.now()}`;
+                            imagePreviewAt.src = `${data.instru_img}`;
                             imagePreviewContainerAt.classList.remove('d-none');
                         }
                         else {
@@ -337,7 +323,7 @@ function abrirModalExclusao(id,instrumento,img){
     const mensagem = document.getElementById("mensagemExclusao");
     mensagem.innerHTML = `Deseja Excluir ${instrumento} ?
         <div style="background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; height: 100%; min-height: 150px; border-right: 1px solid #e5e7eb;">
-            <img src="uploads/${img}" class="img-fluid rounded-start" alt="${instrumento}" style="max-height: 150px; object-fit: contain; padding: 1rem;">
+            <img src="${img}" class="img-fluid rounded-start" alt="${instrumento}" style="max-height: 150px; object-fit: contain; padding: 1rem;">
         </div>
     `
     const modal = new bootstrap.Modal(document.getElementById('modalExcluir'));

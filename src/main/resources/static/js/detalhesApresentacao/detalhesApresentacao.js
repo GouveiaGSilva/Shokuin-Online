@@ -237,7 +237,7 @@ async function abrirPrevia(idAgenda, idApresentacao) {
                     }catch(e){console.error(e)}
                 }
 
-                const srcImagem = base64Img ? `/uploads/formacoes/${base64Img}` : "/img/Formação_Generica.png";
+                const srcImagem = base64Img ? `${base64Img}` : "/img/Formação_Generica.png";
                 htmlPDF += `
                     <div class="mb-4 p-3 bg-white rounded border" style="border-color: #dee2e6 !important;">
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
@@ -404,7 +404,7 @@ async function baixarPDF(idAgenda, idApresentacao) {
                             }
                         }catch(e){console.error(e)}
                     }
-                    const srcImagem = base64Img ? `/uploads/formacoes/${base64Img}` : "/img/Formação_Generica.png";
+                    const srcImagem = base64Img ? `${base64Img}` : "/img/Formação_Generica.png";
 
                     htmlPDF += `
                         <div class="mb-4 p-3 bg-white rounded border" style="border-color: #dee2e6 !important; background-color: #ffffff !important; page-break-inside: avoid;">

@@ -1,22 +1,4 @@
-async function converterImgParaBase64(url) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            const dataURL = canvas.toDataURL('image/png');
-            resolve(dataURL);
-        };
-        img.onerror = () => {
-            reject(new Error("Erro ao carregar a imagem"));
-        };
-        img.src = url;
-    });
-}
+
 
 async function gerarPDFFormacoesApre(id) {
     // Exibe um modal/aviso de carregamento (opcional, pode ser substituído por um spinner)
@@ -79,8 +61,7 @@ async function gerarPDFFormacoesApre(id) {
 
             if (formacao && formacao.forma_img) {
                 try {
-                    const imgUrl = `/uploads/formacoes/${formacao.forma_img}`;
-                    const imgBase64 = await converterImgParaBase64(imgUrl);
+                    const imgBase64 = formacao.forma_img ? `${formacao.forma_img}` : "";
                     
                     // Ajusta a imagem mantendo a proporção. Largura máx: pageWidth - 30
                     const imgProps = doc.getImageProperties(imgBase64);

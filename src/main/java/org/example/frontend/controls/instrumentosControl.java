@@ -28,52 +28,13 @@ public class instrumentosControl {
             return ResponseEntity.badRequest().body(SingletonDB.getConexao().getMensagemErro());
     }
 
-    @PostMapping("salvarImg")
-    public ResponseEntity<Object> salvarImg(String instru_nome, MultipartFile imagem){
-        String UPLOAD_FOLDER = "uploads";
-        try {
-            File uploadFolder = new File(UPLOAD_FOLDER);
-            if (!uploadFolder.exists())
-                uploadFolder.mkdir();
-            imagem.transferTo(new File(uploadFolder.getAbsolutePath() + "\\" +instru_nome));
-            return ResponseEntity.ok().body(instru_nome);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao armazenar o arquivo. " + e.getMessage());
-        }
-    }
-
-
     @PutMapping("atualizaInstrumento")
     public ResponseEntity<Object> atualizarInstrumento(@RequestBody Instrumentos i){
-        SingletonDB.conectar();
-        Instrumentos old = i.getInstrumentoById(i.getId());
-        SingletonDB.desconectar();
-        String oldImg = old != null ? old.getImg() : null;
-
-        boolean nameChanged = old != null && i.getNome() != null && !old.getNome().equals(i.getNome());
-        boolean imageUploaded = i.getImg() != null && !i.getImg().equals(oldImg);
-        
-        if (nameChanged && !imageUploaded && oldImg != null && !oldImg.isEmpty()) {
-            String extensao = oldImg.contains(".") ? oldImg.substring(oldImg.lastIndexOf(".")) : "";
-            String newImgName = i.getNome() + extensao;
-            File oldFile = new File("uploads/" + oldImg);
-            File newFile = new File("uploads/" + newImgName);
-            if(oldFile.exists()){
-                oldFile.renameTo(newFile);
-            }
-            i.setImg(newImgName);
-        }
         SingletonDB.conectar();
         boolean flag = i.atualizarInstrumento();
         SingletonDB.desconectar();
         
         if(flag){
-            if (imageUploaded && oldImg != null && !oldImg.isEmpty()) {
-                File oldFile = new File("uploads/" + oldImg);
-                if(oldFile.exists()){
-                    oldFile.delete();
-                }
-            }
             return ResponseEntity.ok().body(i);
         }
         else
@@ -183,28 +144,11 @@ public class instrumentosControl {
         }
         
         String newName = baseName + suffix;
-        String newImgName = null;
 
-        if (oldImg != null && !oldImg.isEmpty()) {
-            int dotIndex = oldImg.lastIndexOf(".");
-            if (dotIndex > 0) {
-                newImgName = oldImg.substring(0, dotIndex) + suffix + oldImg.substring(dotIndex);
-            } else {
-                newImgName = oldImg + suffix;
-            }
-        }
-
-        boolean flag = instrumentos.excluirInstrumento(newName, newImgName);
+        boolean flag = instrumentos.excluirInstrumento(newName, oldImg);
         SingletonDB.desconectar();
 
         if (flag) {
-            if (oldImg != null && !oldImg.isEmpty() && newImgName != null) {
-                File oldFile = new File("uploads/" + oldImg);
-                File newFile = new File("uploads/" + newImgName);
-                if(oldFile.exists()){
-                    oldFile.renameTo(newFile);
-                }
-            }
             return ResponseEntity.ok().body("Instrumento deletado.");
         }
         else

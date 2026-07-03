@@ -4,8 +4,6 @@ import org.example.frontend.util.SingletonDB;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import javax.swing.*;
-
 @SpringBootApplication
 public class FrontEndApplication {
 
@@ -15,7 +13,6 @@ public class FrontEndApplication {
             SpringApplication.run(FrontEndApplication.class, args);
         } else {
             System.out.println("Erro ao conectar no banco de dados. Verifique suas Variáveis de Ambiente (DB_URL, DB_USER, DB_PASSWORD).");
-            System.out.println("Detalhe do erro: " + SingletonDB.getConexao().getMensagemErro());
         }
     }
 }

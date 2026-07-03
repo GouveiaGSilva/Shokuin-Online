@@ -18,20 +18,6 @@ import java.util.List;
 @RequestMapping("formacao")
 public class formacaoControl {
 
-    @PostMapping("/salvarImg")
-    public ResponseEntity<Object> salvarImg(String forma_img, MultipartFile imagem){
-        String UPLOAD_FOLDER = "uploads/formacoes";
-        try {
-            File uploadFolder = new File(UPLOAD_FOLDER);
-            if (!uploadFolder.exists())
-                uploadFolder.mkdirs();
-            imagem.transferTo(new File(uploadFolder.getAbsolutePath() + "/" + forma_img));
-            return ResponseEntity.ok().body(forma_img);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao armazenar o arquivo. " + e.getMessage());
-        }
-    }
-
     @PostMapping("/salvar-formacao")
     public ResponseEntity<Object> cadastrar(@RequestBody Formacao formacao) {
         SingletonDB.conectar();
@@ -56,32 +42,16 @@ public class formacaoControl {
         }
     }
 
-    @PutMapping("/atualizar-formacao")
-    public ResponseEntity<Object> atualizar(@RequestBody Formacao formacao) {
-        if (formacao.getId() == null || formacao.getId() <= 0) {
-            return ResponseEntity.badRequest().body(new Erro("Erro", "ID da formação é necessário para atualizar."));
-        }
-
-        SingletonDB.conectar();
-        Formacao old = new Formacao().buscarPorId(formacao.getId());
-        SingletonDB.desconectar();
-        String oldImg = old != null ? old.getImagem() : null;
-
+    @PutMapping("atualizar-formacao")
+    public ResponseEntity<Object> atualizarFormacao(@RequestBody Formacao formacao) {
         SingletonDB.conectar();
         boolean flag = formacao.atualizarFormacao();
         SingletonDB.desconectar();
+
         if (flag) {
-            // Se a imagem mudou, exclui a antiga do disco
-            if (formacao.getImagem() != null && !formacao.getImagem().equals(oldImg) && oldImg != null && !oldImg.isEmpty()) {
-                File oldFile = new File("uploads/formacoes/" + oldImg);
-                if(oldFile.exists()){
-                    oldFile.delete();
-                }
-            }
-            return ResponseEntity.ok(formacao);
+            return ResponseEntity.ok().body(formacao);
         } else {
-            String erroSql = SingletonDB.getConexao().getMensagemErro();
-            return ResponseEntity.badRequest().body(new Erro("Erro ao atualizar", erroSql));
+            return ResponseEntity.badRequest().body(SingletonDB.getConexao().getMensagemErro());
         }
     }
 
@@ -133,38 +103,16 @@ public class formacaoControl {
         }
     }
 
-    @DeleteMapping("/excluir-id")
-    public ResponseEntity<Object> deletarFormacao(@RequestBody Formacao formacao){
+    @DeleteMapping("excluir-id")
+    public ResponseEntity<Object> deletarFormacao(@RequestBody Formacao formacao) {
         SingletonDB.conectar();
-        Formacao old = new Formacao().buscarPorId(formacao.getId());
         boolean flag = formacao.deletarFormacao();
         SingletonDB.desconectar();
-        
+
         if (flag) {
-            String oldImg = old != null ? old.getImagem() : null;
-            if (oldImg != null && !oldImg.isEmpty()) {
-                File oldFile = new File("uploads/formacoes/" + oldImg);
-                if(oldFile.exists()){
-                    oldFile.delete();
-                }
-            }
-            return ResponseEntity.ok().body("Formacão deletada.");
+            return ResponseEntity.ok().body("Formação deletada com sucesso.");
+        } else {
+            return ResponseEntity.badRequest().body(SingletonDB.getConexao().getMensagemErro());
         }
-        else
-            return ResponseEntity.badRequest().body("Não foi possível deletar a Formação.");
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
