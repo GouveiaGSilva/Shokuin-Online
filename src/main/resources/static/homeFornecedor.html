@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="pt-br" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Tipos de Cargos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body onload="carregarHome()">
+<!-- ICONES VALIDAÇÃO -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;" id="icones">
+</svg>
+<div id="app-wrapper">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="main-content d-flex flex-column">
+    <div class="container-fluid p-4 p-md-5 mx-auto" style="max-width: 1000px;">
+        <div class="text-center mb-5">
+            <h2 class="font-display fw-bold display-6 mb-2 text-dark">Lista de Fornecedores</h2>
+            <p class="text-muted mx-auto" style="max-width: 500px;">Registro oficial das luthiers e importadores de materiais de Taiko.</p>
+        </div>
+        <div class="glass-panel p-4 p-md-5 shadow-lg position-relative overflow-hidden" style="border-top: 4px solid var(--taiko-gold); background-color: #ffffff;">
+            <div class="position-relative z-1">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+                    <div class="input-group input-group-lg shadow-sm" style="max-width: 400px;">
+                        <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="pesquisar" placeholder="Pesquisar..." style="font-size: 1rem;">
+                    </div>
+                    <button class="btn btn-taiko shadow-sm px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#cadastrar"><i class="bi bi-plus-circle me-2"></i> Adicionar</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="tabela" class="table table-hover align-middle">
+                        <thead class="table-light"><tr><th>Empresa</th><th>CNPJ</th><th>Endereço</th><th class="text-end">Ações</th></tr></thead>
+                        <tbody id="resultado">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal de alterar !-->
+    <div class="modal fade" id="alterar" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="editModalLabel">Atualizar Fornecedor</h5>
+                            <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Atualizar informações</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-3">
+                    <form id="formAtualizacao">
+                        <!-- Nome Fornecedor -->
+                        <div class="mb-4">
+                            <label for="nomeFornecedor" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Razão Social / Nome <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-lg shadow-sm">
+                                <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-shop"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="nomeFornecedorA" placeholder="Nome da empresa fabricante" required style="font-size: 1.1rem;">
+                            </div>
+                        </div>
+                        <div class="row g-4 mb-4">
+                            <!-- CNPJ -->
+                            <div class="col-md-5">
+                                <label for="cnpj" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CNPJ <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cnpjA"
+                                           placeholder="00.000.000/0001-00" maxlength="18" oninput="mascaraCNPJ(this)" required style="font-size: 1.1rem;">
+                                </div>
+                            </div>
+                            <!-- Endereco -->
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-4">
+                                    <label for="cep" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CEP <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-123"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cepA" placeholder="00000-000" maxlength="9" required oninput="mascaraCEP(this)" onblur="buscarEndereco()">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="estado" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Estado <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-map"></i></span>
+                                        <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="estadoA" required style="font-size: 1rem;">
+                                            <option value="" selected disabled>UF</option>
+                                            <option value="AC">AC</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AP">AP</option>
+                                            <option value="AM">AM</option>
+                                            <option value="BA">BA</option>
+                                            <option value="CE">CE</option>
+                                            <option value="DF">DF</option>
+                                            <option value="ES">ES</option>
+                                            <option value="GO">GO</option>
+                                            <option value="MA">MA</option>
+                                            <option value="MT">MT</option>
+                                            <option value="MS">MS</option>
+                                            <option value="MG">MG</option>
+                                            <option value="PA">PA</option>
+                                            <option value="PB">PB</option>
+                                            <option value="PR">PR</option>
+                                            <option value="PE">PE</option>
+                                            <option value="PI">PI</option>
+                                            <option value="RJ">RJ</option>
+                                            <option value="RN">RN</option>
+                                            <option value="RS">RS</option>
+                                            <option value="RO">RO</option>
+                                            <option value="RR">RR</option>
+                                            <option value="SC">SC</option>
+                                            <option value="SP">SP</option>
+                                            <option value="SE">SE</option>
+                                            <option value="TO">TO</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label for="cidade" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Cidade <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-buildings"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cidadeA" placeholder="Nome da cidade" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-9">
+                                    <label for="rua" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Rua / Avenida <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-signpost-split"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="ruaA" placeholder="Endereço principal" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="numero" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Número <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-hash"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="numeroA" placeholder="123" required oninput="mascaraNumero(this)">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-6">
+                                    <label for="bairro" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Bairro <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-pin-map"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="bairroA" placeholder="Nome do bairro" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="complemento" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Complemento</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-door-open"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="complementoA" placeholder="Apto, Bloco, etc (Opcional)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                            <button type="button" class="btn btn-light px-4 fw-semibold text-secondary shadow-sm" data-bs-dismiss="modal">Cancelar</button>
+                            <button id="btConfirmaAlterar" type="submit" class="btn btn-taiko px-4 fw-bold shadow-sm d-flex align-items-center gap-2">
+                                <i class="bi bi-save"></i> Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal de excluir !-->
+    <div class="modal fade" id="excluir" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%">
+            <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="excluirLabel">Aviso</h5>
+                            <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Excluir Fornecedor</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-3" style="margin-bottom: -5%">
+                    <p class="modal-title font-display fw-bold text-dark" >Deseja realmente excluir?</p>
+                    <br>
+                    <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                        <button type="button" class="btn btn-light px-4 fw-semibold text-secondary shadow-sm" data-bs-dismiss="modal">Cancelar</button>
+                        <button id="btConfirma" type="submit" class="btn btn-taiko px-4 fw-bold shadow-sm d-flex align-items-center gap-2" data-bs-dismiss="modal">
+                            <i class="bi bi-save"></i> Confirmar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal de cadastro !-->
+    <div class="modal fade" id="cadastrar" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="cadastrarLabel">Cadastrar Fornecedor</h5>
+                            <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Inserir informações</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-3">
+                    <form id="formCadastro">
+                        <!-- Nome Fornecedor -->
+                        <div class="mb-4">
+                            <label for="nomeFornecedor" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Razão Social / Nome <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-lg shadow-sm">
+                                <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-shop"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="nomeFornecedor" placeholder="Nome da empresa fabricante" required style="font-size: 1.1rem;">
+                            </div>
+                        </div>
+                        <div class="row g-4 mb-4">
+                            <!-- CNPJ -->
+                            <div class="col-md-5">
+                                <label for="cnpj" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CNPJ <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cnpj"
+                                           placeholder="00.000.000/0001-00" maxlength="18" oninput="mascaraCNPJ(this)" required style="font-size: 1.1rem;">
+                                </div>
+                            </div>
+                            <!-- Endereco -->
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-4">
+                                    <label for="cep" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CEP <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-123"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cep" placeholder="00000-000" maxlength="9" required oninput="mascaraCEP(this)" onblur="buscarEndereco()">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="estado" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Estado <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-map"></i></span>
+                                        <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="estado" required style="font-size: 1rem;">
+                                            <option value="" selected disabled>UF</option>
+                                            <option value="AC">AC</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AP">AP</option>
+                                            <option value="AM">AM</option>
+                                            <option value="BA">BA</option>
+                                            <option value="CE">CE</option>
+                                            <option value="DF">DF</option>
+                                            <option value="ES">ES</option>
+                                            <option value="GO">GO</option>
+                                            <option value="MA">MA</option>
+                                            <option value="MT">MT</option>
+                                            <option value="MS">MS</option>
+                                            <option value="MG">MG</option>
+                                            <option value="PA">PA</option>
+                                            <option value="PB">PB</option>
+                                            <option value="PR">PR</option>
+                                            <option value="PE">PE</option>
+                                            <option value="PI">PI</option>
+                                            <option value="RJ">RJ</option>
+                                            <option value="RN">RN</option>
+                                            <option value="RS">RS</option>
+                                            <option value="RO">RO</option>
+                                            <option value="RR">RR</option>
+                                            <option value="SC">SC</option>
+                                            <option value="SP">SP</option>
+                                            <option value="SE">SE</option>
+                                            <option value="TO">TO</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label for="cidade" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Cidade <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-buildings"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cidade" placeholder="Nome da cidade" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-9">
+                                    <label for="rua" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Rua / Avenida <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-signpost-split"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="rua" placeholder="Endereço principal" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="numero" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Número <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-hash"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="numero" placeholder="123" required oninput="mascaraNumero(this)">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-6">
+                                    <label for="bairro" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Bairro <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-pin-map"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="bairro" placeholder="Nome do bairro" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="complemento" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Complemento</label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-door-open"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="complemento" placeholder="Apto, Bloco, etc (Opcional)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column flex-md-row justify-content-end gap-3 mt-5 pt-3">
+                            <button type="reset" class="btn btn-light px-4 py-3 fw-semibold text-secondary shadow-sm d-flex align-items-center justify-content-center gap-2" style="border: 1px solid #e5e7eb;">
+                                <i class="bi bi-eraser fs-5"></i> Limpar
+                            </button>
+                            <button type="submit" class="btn btn-taiko px-5 py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-check2-square fs-5"></i> Registrar Fornecedor
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalSucessoGenerico" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%">
+            <div class="modal-content" style="border: none; border-top: 4px solid #198754; background-color: #fff;">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-success text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                            <i class="bi bi-check-circle-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark">Sucesso</h5>
+                            <span class="text-success small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Operação Concluída</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body p-4 pt-3">
+                    <p id="textoSucessoGenerico" class="fw-medium text-dark mb-4"></p>
+                    <div class="modal-footer border-top-0 p-0 d-flex justify-content-end">
+                        <button type="button" class="btn btn-success px-4 fw-bold shadow-sm" data-bs-dismiss="modal" onclick="window.location.reload()">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalErroGenerico" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%">
+            <div class="modal-content" style="border: none; border-top: 4px solid #dc3545; background-color: #fff;">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-danger text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                            <i class="bi bi-x-circle-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark">Erro</h5>
+                            <span class="text-danger small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Falha na Operação</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-3">
+                    <p id="textoErroGenerico" class="fw-medium text-dark mb-4"></p>
+                    <div class="modal-footer border-top-0 p-0 d-flex justify-content-end">
+                        <button type="button" class="btn btn-danger px-4 fw-bold shadow-sm" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+</div>
+<script src="js/sidebars.js"></script>
+<script src="js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="js/fornecedor/viewFornecedores.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-br" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Dantai Fênix - Cadastro de Cargo</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EW1pVi14HZShWF8KD4Uu3NALLJ7uBalzJA&s"
+        type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body onload="carregarHome(); carregarIconesCargos()">
+    <!-- ICONES VALIDAÇÃO CARGOS -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;" id="icones">
+    </svg>
+    <div id="app-wrapper">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="main-content d-flex flex-column">
+            <div class="container-fluid p-4 p-md-5 mx-auto" style="max-width: 800px;">
+                <div class="text-center mb-5">
+                    <h2 class="font-display fw-bold display-6 mb-2 text-dark">Responsabilidades</h2>
+                    <p class="text-muted mx-auto" style="max-width: 500px;">Defina a hierarquia e funções do seu grupo. Cada cargo carrega a honra e dever do Dantai Fênix.</p>
+                </div>
+                <div class="glass-panel p-4 p-md-5 shadow-lg position-relative overflow-hidden" style="border-top: 4px solid var(--taiko-gold); background-color: #ffffff;">
+                    <i class="bi bi-person-badge position-absolute" style="font-size: 18rem; right: -40px; bottom: -60px; opacity: 0.03; z-index: 0; color: var(--taiko-ink); transform: rotate(-10deg);"></i>
+                    <div class="position-relative z-1">
+                        <div class="d-flex align-items-center gap-3 mb-5 pb-3 border-bottom border-light">
+                            <div class="bg-taiko-gold p-3 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                                <i class="bi bi-award fs-4"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display fw-bold m-0 text-dark">Cadastro de Cargo</h4>
+                                <span class="text-taiko-red small fw-bold text-uppercase" style="letter-spacing: 0.15em;">Nova Posição</span>
+                            </div>
+                        </div>
+                        <form id="formCadastro">
+                            <div class="mb-4">
+                                <label for="nomeCargo" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Nome do Cargo <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-gold"><i class="bi bi-bookmark-star"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" name="cargo" id="nomeCargo" placeholder="Ex: Tocador Base, Auxiliar, Coordenador" required style="font-size: 1.1rem;">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="funcao" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Função / Descrição <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-secondary align-items-start pt-3"><i class="bi bi-card-text"></i></span>
+                                    <textarea class="form-control border-start-0 ps-0 fw-medium bg-light" name="funcao" id="funcao" rows="4" placeholder="Descreva as responsabilidades que esse cargo exige na apresentação." required></textarea>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column flex-md-row justify-content-end gap-3 mt-5 pt-3">
+                                <button type="reset" class="btn btn-light px-4 py-3 fw-semibold text-secondary shadow-sm d-flex align-items-center justify-content-center gap-2" style="border: 1px solid #e5e7eb;">
+                                    <i class="bi bi-eraser fs-5"></i> Limpar
+                                </button>
+                                <button type="submit" class="btn btn-taiko px-5 py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                    <i class="bi bi-check2-square fs-5"></i> Registrar Cargo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/sidebars.js"></script>
+    <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+<script src="js/gerenciarCargo.js"></script>
+</html>

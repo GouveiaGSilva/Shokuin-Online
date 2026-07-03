@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 163 298" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Odaiko">
+    </g>
+    <g id="Okedo" transform="matrix(1,0,0,1,-1525.206087,-1963.338919)">
+        <g id="Chu">
+        </g>
+        <g id="Shime--Corda-" serif:id="Shime (Corda)">
+        </g>
+        <g id="Okedo1" serif:id="Okedo">
+        </g>
+        <g id="Katsugui">
+        </g>
+        <g id="Yoku" transform="matrix(0.244624,0,0,0.621692,1269.443993,1696.825596)">
+            <g transform="matrix(1,0,0,1,740.935514,0)">
+                <path d="M899.682,506.209C728.612,608.951 701.168,716.776 899.682,834.431" style="fill:none;stroke:black;stroke-width:17.64px;"/>
+            </g>
+            <g transform="matrix(-1,0,0,1,2004.095007,11.694668)">
+                <path d="M899.682,506.209C728.612,608.951 701.168,716.776 899.682,834.431" style="fill:none;stroke:black;stroke-width:17.64px;"/>
+            </g>
+            <path d="M1372.515,563.08L1372.515,670.32L1421.378,719.183L1421.378,889.789L1430.712,719.434L1477.472,672.674L1477.472,563.08L1486.085,671.076L1528.366,713.358L1528.366,877.034L1537.198,713.045L1583.958,666.285L1583.958,545.861L1591.891,665.126L1604.667,704.903L1640.617,832.919C1569.554,725.193 1582.062,616.676 1640.617,507.722L1604.667,704.903" style="fill:none;stroke:rgb(255,132,124);stroke-width:13.23px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;stroke-dasharray:13.23,13.23;"/>
+            <g transform="matrix(-1,0,0,1,2745.030521,0)">
+                <path d="M1372.515,563.08L1372.515,670.32L1421.378,719.183L1421.378,889.789L1430.712,719.434L1477.472,672.674L1477.472,563.08L1486.085,671.076L1528.366,713.358L1528.366,877.034L1537.198,713.045L1583.958,666.285L1583.958,545.861L1591.891,665.126L1604.667,704.903L1640.617,832.919C1569.554,725.193 1582.062,616.676 1640.617,507.722L1604.667,704.903" style="fill:none;stroke:rgb(255,132,124);stroke-width:13.23px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;stroke-dasharray:13.23,13.23;"/>
+            </g>
+            <g transform="matrix(1,0,0,1,695.439454,165.73565)">
+                <ellipse cx="677.076" cy="340.474" rx="268.102" ry="56.87" style="fill:none;stroke:black;stroke-width:17.64px;"/>
+            </g>
+            <g transform="matrix(1,0,0,1,695.439454,492.444892)">
+                <path d="M945.178,340.474C945.178,371.861 825.045,397.344 677.076,397.344C529.106,397.344 408.974,371.861 408.974,340.474" style="fill:none;stroke:black;stroke-width:17.64px;stroke-dasharray:17.64,17.64;"/>
+            </g>
+            <g transform="matrix(1.893131,0,0,1.232222,404.57193,-1869.208753)">
+                <rect x="421.028" y="2042.833" width="198.201" height="62.989" style="fill:white;stroke:black;stroke-width:0.21px;stroke-linejoin:miter;stroke-miterlimit:15;"/>
+            </g>
+            <g transform="matrix(4.552396,0,0,1.696186,-1675.745324,-1495.286889)">
+                <g transform="matrix(50,0,0,50,710.109944,1303.03333)">
+                </g>
+                <text x="637.893px" y="1303.033px" style="font-family:'TimesNewRomanPSMT', 'Times New Roman', serif;font-size:50px;">YO</text>
+            </g>
+        </g>
+    </g>
+    <g id="Shime">
+    </g>
+    <g id="Nagado">
+    </g>
+    <g id="Prancheta1" transform="matrix(0.263683,0,0,0.483659,293.357731,331.729605)">
+        <rect x="-1112.54" y="-685.874" width="615.844" height="615.844" style="fill:none;"/>
+    </g>
+</svg>

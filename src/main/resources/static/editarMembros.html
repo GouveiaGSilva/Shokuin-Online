@@ -1,0 +1,90 @@
+
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <title>Shokuin Taiko</title>
+
+    <!-- INICIO -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="/css/sidebars.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+
+</head>
+<!-- ELEMENTOS -->
+<body onload="carregarHome();mostrarMembros();mostrarCargos()">
+<main class="d-flex flex-nowrap">
+
+    <!-- HOMEPAGE -->
+    <div id="home">
+    </div>
+    <div class="b-example-divider b-example-vr"></div>
+
+
+    <!-- LAYOUT CUSTOMIZAVEL -->
+    <div class="b-example-divider b-example-vr"></div>
+
+    <div style="width: 50%; margin: auto" class="container p-5 border mt-4 mb-4">
+        <h1 style="text-align: center">Atualizar Membro</h1><br>
+
+        <form class="row g-3 needs-validation" id="formAtualizacao" novalidate>
+
+            <div class="col-12" id="containerMembroAntigo" >
+
+            </div>
+
+            <hr class="mt-4 mb-2">
+
+            <div class="col-md-8">
+                <label for="nome" class="form-label">Nome Completo</label>
+                <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o novo nome" required>
+            </div>
+
+            <div class="col-md-4">
+                <label for="cpf" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Apenas números" required>
+            </div>
+
+            <div class="col-md-4">
+                <label for="idade" class="form-label">Idade</label>
+                <input type="number" class="form-control" id="idade" name="idade" placeholder="Ex: 18" min="5" required>
+            </div>
+
+            <div class="col-md-4">
+                <label for="sexo" class="form-label">Sexo</label>
+                <select class="form-control" id="sexo" name="sexo" required>
+                    <option value="" disabled selected hidden>Selecione</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                </select>
+            </div>
+
+            <div class="col-md-4" id="cargo">
+
+            </div>
+
+            <div class="col-12">
+                <label for="endereco" class="form-label">Endereço</label>
+                <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Rua, Número, Bairro" required>
+            </div>
+
+
+        </form>
+
+        <div class="col-12 mt-4 text-center">
+            <button onclick="atualizarMembro()" class="btn btn-primary w-50" >Atualizar Membro</button>
+        </div>
+    </div>
+
+</main>
+<!-- SCRIPTS -->
+
+<script src="/js/cadastrarMembros.js"></script>
+<script src="/js/sidebars.js" class="astro-vvvwv3sm"></script>
+<script src="js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-
+
+
+FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

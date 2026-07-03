@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-br" data-bs-theme="auto">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ShokuinTaiko</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EW1pVi14HZShWF8KD4Uu3NALLJ7uBalzJA&s" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/login.css" rel="stylesheet" />
+</head>
+
+<body class="login-body">
+
+<div class="card login-card glass-panel shadow-lg p-4 m-3 position-relative overflow-hidden">
+    <div class="sidebar-logo-glow" style="top: -10px; right: -10px; opacity: 0.25;"></div>
+
+    <div class="text-center mb-4">
+        <div class="logo-circle rounded-circle d-inline-flex align-items-center justify-content-center shadow mb-3" style="width: 56px; height: 56px;">
+            <span class="text-white font-display fw-bold fs-4">F</span>
+        </div>
+        <h2 class="font-display fw-bold mb-0 text-white" style="letter-spacing: 0.1em;">SHOKUIN</h2>
+        <p class="text-taiko-red m-0" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600;">Dantai Fênix</p>
+    </div>
+
+    <div id="alerta-erro" class="alert alert-danger d-none small mb-3" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> <span id="erro-mensagem">Usuário ou senha inválidos.</span>
+    </div>
+
+    <form id="form-login">
+        <div class="mb-3">
+            <label Aksfor="username" class="form-label login-field-label">Usuário</label>
+            <div class="input-group">
+                <span class="input-group-text login-input-icon"><i class="bi bi-person-fill"></i></span>
+                <input type="text" class="form-control login-input border-start-0" id="username" required autocomplete="username" placeholder="Digite seu usuário">
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="password" class="form-label login-field-label">Senha</label>
+            <div class="input-group">
+                <span class="input-group-text login-input-icon"><i class="bi bi-lock-fill"></i></span>
+                <input type="password" class="form-control login-input border-start-0" id="password" required autocomplete="current-password" placeholder="Digite sua senha">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-taiko w-100 py-2.5 rounded-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-box-arrow-in-right"></i> Entrar no Sistema
+        </button>
+    </form>
+</div>
+
+<script src="js/login.js"></script>
+</body>
+</html>

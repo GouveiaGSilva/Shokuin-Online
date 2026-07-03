@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema - Editor de Documento</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/docTxt.css">
+</head>
+<body>
+
+<header>
+    <button class="btn-ui" onclick="verificarSair()">< Voltar</button>
+
+    <div class="titulo-container">
+        <input type="text" id="doc-titulo" class="titulo-apresentacao" value="NOME DO DOCUMENTO <EDITÁVEL>" spellcheck="false">
+    </div>
+
+    <button class="btn-ui" id="btn-salvar" onclick="salvar()">Salvar</button>
+</header>
+
+<div id="toolbar">
+    <select class="ql-font"></select>
+    <button class="btn-size" onclick="mudarSize(-1)">-</button>
+    <input type="number" id="font-size-input" value="11" min="8" max="72">
+    <button class="btn-size" onclick="mudarSize(1)">+</button>
+
+    <span class="ql-formats">
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+        <select class="ql-color"></select>
+        </span>
+
+    <span class="ql-formats">
+        <select class="ql-align"></select>
+        <button class="ql-list" value="check"></button> <button class="ql-list" value="ordered"></button>
+        <button class="ql-list" value="bullet"></button>
+        <button class="ql-indent" value="-1"></button>
+        <button class="ql-indent" value="+1"></button>
+        </span>
+
+    <span class="ql-formats">
+        <button class="ql-link"></button>
+        <button class="ql-image"></button>
+        <button class="ql-clean"></button>
+        </span>
+</div>
+
+<div id="main-content-wrapper">
+    <div id="editor-container-view">
+        <div id="editor">
+        </div>
+    </div>
+    
+    <aside id="members-sidebar">
+        <div class="sidebar-header">
+            <h3>Participantes da Apresentação</h3>
+        </div>
+        <div id="lista-membros-sidebar" class="sidebar-content custom-scroll">
+            <div class="text-muted text-center p-4">
+                <small>Carregando membros...</small>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<div id="modal-confirmacao" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+            </div>
+            <div class="header-text">
+                <h2>CONFIRMAR SALVAMENTO</h2>
+                <p>O DOCUMENTO SERÁ EXPORTADO E SALVO NO SISTEMA</p>
+            </div>
+            <span class="modal-close" onclick="fecharModal()">&times;</span>
+        </div>
+
+        <div class="modal-body">
+            <p>Deseja realmente salvar o arquivo <strong id="modal-nome-arquivo"></strong>?</p>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-limpar" onclick="fecharModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 8px;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                Cancelar
+            </button>
+            <button class="btn-registrar" onclick="confirmarSalvar()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 8px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                Confirmar e Salvar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-sucesso" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #2ec4b6;">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div class="header-text">
+                <h2>SALVO COM SUCESSO</h2>
+                <p>O DOCUMENTO FOI GUARDADO NO BANCO DE DADOS</p>
+            </div>
+        </div>
+        <div class="modal-body">
+            <p>As alterações do seu documento foram armazenadas com total segurança.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-registrar" style="background-color: #2ec4b6;" onclick="fecharModalSucesso()">OK</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-sair" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #e74c3c;">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            </div>
+            <div class="header-text">
+                <h2>SAIR SEM SALVAR?</h2>
+                <p>AS MODIFICAÇÕES RECENTES SERÃO PERDIDAS</p>
+            </div>
+            <span class="modal-close" onclick="fecharModalSair()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Você realizou alterações no documento. Tem certeza que deseja voltar sem salvar?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-limpar" onclick="fecharModalSair()">Cancelar</button>
+            <button class="btn-registrar" style="background-color: #e74c3c;" onclick="confirmarSair()">Sair sem Salvar</button>
+        </div>
+    </div>
+</div>
+<div id="modal-erro" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color: #e74c3c;">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            </div>
+            <div class="header-text">
+                <h2>ERRO</h2>
+                <p>OPERAÇÃO NÃO REALIZADA</p>
+            </div>
+            <span class="modal-close" onclick="fecharModalErro()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p id="msmErro"></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-limpar" onclick="fecharModalErro()">OK</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="js/docTxt/docTxt.js"></script>
+</body>
+</html>

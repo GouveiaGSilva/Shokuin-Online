@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="auto">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Dantai Fênix | Repertório</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EW1pVi14HZShWF8KD4Uu3NALLJ7uBalzJA&s" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body onload="carregarHome()">
+<div id="app-wrapper">
+
+    <div id="mobile-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-content d-flex flex-column">
+
+        <nav class="d-md-none bg-white shadow-sm p-3 d-flex justify-content-between align-items-center sticky-top">
+            <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle bg-taiko-red d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                    <span class="text-white font-display fw-bold" style="font-size: 0.875rem;">F</span>
+                </div>
+                <span class="font-display fw-bold fs-5 text-dark">SHOKUIN</span>
+            </div>
+            <button class="btn btn-link text-dark p-0 text-decoration-none" onclick="toggleSidebar()">
+                <i class="bi bi-list fs-2"></i>
+            </button>
+        </nav>
+
+        <div class="container-fluid p-4 p-md-5 mx-auto position-relative" style="max-width: 1100px;">
+
+            <div class="position-absolute d-none d-md-block" style="top: 30px; left: 30px; z-index: 10;">
+                <button type="button" class="btn btn-link text-secondary text-decoration-none d-flex align-items-center gap-2 px-0 hover-opacity" onclick="voltar()">
+                    <i class="bi bi-chevron-left fs-4"></i> <span class="fw-semibold">Voltar</span>
+                </button>
+            </div>
+            <div class="d-md-none mb-4 text-start">
+                <button type="button" class="btn btn-link text-secondary text-decoration-none d-inline-flex align-items-center gap-2 px-0" onclick="voltar()">
+                    <i class="bi bi-chevron-left fs-5"></i> <span class="fw-semibold">Voltar</span>
+                </button>
+            </div>
+            <div class="text-center mb-5 mt-md-0 mt-3">
+                <h2 class="font-display fw-bold display-6 mb-2 text-dark">Atualizar Repertório</h2>
+                <p class="text-muted mx-auto" style="max-width: 500px;">Altere as músicas e suas respectivas formações na apresentação</p>
+            </div>
+
+            <div class="glass-panel p-4 p-md-5 shadow-lg position-relative overflow-hidden" style="border-top: 4px solid var(--taiko-red); background-color: #ffffff;">
+                <i class="bi bi-music-note-list position-absolute" style="font-size: 18rem; right: -40px; bottom: -60px; opacity: 0.03; z-index: 0; color: var(--taiko-ink); transform: rotate(-15deg);"></i>
+
+                <div class="position-relative z-1">
+
+                    <div class="d-flex align-items-center gap-3 mb-5 pb-3 border-bottom border-light">
+                        <div class="bg-taiko-red text-white p-3 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                            <i class="bi bi-music-note-beamed fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-display fw-bold m-0 text-dark">Alterar as Músicas</h4>
+                            <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.15em;">Repertório do Evento</span>
+                        </div>
+                    </div>
+
+                    <form id="formRepertorio">
+
+                        <h5 class="fw-bold mb-4 text-dark border-bottom pb-2"><i class="bi bi-list-stars me-2 text-taiko-red"></i>Músicas e Formações</h5>
+
+                        <div id="lista-repertorio">
+                            <div class="row g-2 mb-4 align-items-end repertorio-item">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Música <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-vinyl"></i></span>
+                                        <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="selectMusica" required onchange="aoSelecionarMusica(this)">
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Formação <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg shadow-sm">
+                                        <span class="input-group-text bg-light border-end-0 text-taiko-gold"><i class="bi bi-people-fill"></i></span>
+                                        <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="selectFormacao" required>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 d-flex gap-2">
+                                    <button type="button" class="btn btn-outline-danger py-3 px-3 shadow-sm d-flex align-items-center justify-content-center btn-remover d-none" title="Remover Música" onclick="removerLinha(this)">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-2 mb-5">
+                            <button type="button" class="btn btn-light rounded-circle shadow-sm" style="width: 50px; height: 50px; border: 2px dashed var(--taiko-gold);" onclick="adicionarLinha()">
+                                <i class="bi bi-plus-lg fs-4 text-taiko-gold"></i>
+                            </button>
+                            <div class="small text-muted mt-2">Adicionar mais músicas</div>
+                        </div>
+
+                        <div class="d-flex flex-column flex-md-row justify-content-end gap-3 mt-5 pt-3 border-top">
+                            <button type="button" class="btn btn-light px-4 py-3 fw-semibold text-secondary shadow-sm d-flex align-items-center justify-content-center gap-2" style="border: 1px solid #e5e7eb;" onclick="limparRepertorio()">
+                                <i class="bi bi-eraser fs-5"></i> Limpar
+                            </button>
+                            <button type="button" class="btn btn-taiko px-5 py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" onclick="atualizarRepertorio()">
+                                <i class="bi bi-check2-circle fs-5"></i> Salvar Repertório
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalMsg" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%">
+                <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                                <i class="bi bi-pencil-square fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title font-display fw-bold text-dark">Aviso</h5>
+                                <span id="subtitulo" class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;"></span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 pt-3" style="margin-bottom: -5%">
+                        <p id="msg" class="modal-title font-display fw-bold text-dark" ></p>
+                        <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                            <button type="button" class="btn btn-taiko px-4 fw-bold shadow-sm d-flex align-items-center gap-2" data-bs-dismiss="modal" onclick="finalizarCadastro()">
+                                <i class="bi bi-save"></i> Fechar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="js/script.js"></script>
+<script src="js/atualizarRepertorio.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

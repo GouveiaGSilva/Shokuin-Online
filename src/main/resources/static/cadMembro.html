@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Dantai Fênix - Cadastro de Membro</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EW1pVi14HZShWF8KD4Uu3NALLJ7uBalzJA&s"
+          type="image/x-icon">
+
+    <!-- INICIO -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet" />
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body onload="carregarHome(); mostrarCargos()">
+<div id="app-wrapper">
+
+    <!-- SIDEBAR -->
+    <div id="mobile-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <!-- DASHBOARD PRINCIPAL -->
+    <main class="main-content d-flex flex-column">
+
+        <!-- Navbar Mobile -->
+        <nav class="d-md-none bg-white shadow-sm p-3 d-flex justify-content-between align-items-center sticky-top">
+            <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle bg-taiko-red d-flex align-items-center justify-content-center"
+                     style="width: 32px; height: 32px;">
+                    <span class="text-white font-display fw-bold" style="font-size: 0.875rem;">F</span>
+                </div>
+                <span class="font-display fw-bold fs-5 text-dark">SHOKUIN</span>
+            </div>
+            <button class="btn btn-link text-dark p-0 text-decoration-none" onclick="toggleSidebar()">
+                <i class="bi bi-list fs-2"></i>
+            </button>
+        </nav>
+
+        <div class="container-fluid p-4 p-md-5 mx-auto" style="max-width: 800px;">
+
+            <!-- Titulo da Página -->
+            <div class="text-center mb-5">
+                <h2 class="font-display fw-bold display-6 mb-2 text-dark">Integrantes e Tocadores</h2>
+                <p class="text-muted mx-auto" style="max-width: 500px;">Cadastre os membros do Dantai Fênix. A alma do grupo reside nas pessoas que dedicam seu suor aos tambores.</p>
+            </div>
+
+            <!-- Form Card Estilizado (Tema Taiko) -->
+            <div class="glass-panel p-4 p-md-5 shadow-lg position-relative overflow-hidden" style="border-top: 4px solid var(--taiko-red); background-color: #ffffff;">
+                <!-- Ícone Decorativo Secundário (fundo) -->
+                <i class="bi bi-people-fill position-absolute" style="font-size: 18rem; right: -40px; bottom: -60px; opacity: 0.03; z-index: 0; color: var(--taiko-ink); transform: rotate(-5deg);"></i>
+
+                <div class="position-relative z-1">
+
+                    <!-- Cabeçalho do Card -->
+                    <div class="d-flex align-items-center gap-3 mb-5 pb-3 border-bottom border-light">
+                        <div class="bg-taiko-red text-white p-3 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 55px; height: 55px;">
+                            <i class="bi bi-person-plus-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-display fw-bold m-0 text-dark">Cadastro de Membro</h4>
+                            <span class="text-secondary small fw-bold text-uppercase" style="letter-spacing: 0.15em;">Ingresso no Dantai</span>
+                        </div>
+                    </div>
+
+                    <!-- Formulário -->
+                    <form id="formMembro">
+
+                        <div class="row g-4 mb-4">
+                            <!-- Nome -->
+                            <div class="col-md-7">
+                                <label for="nomeMembro" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Nome Completo <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation" >
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-person-circle"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="nomeMembro" placeholder="Nome do integrante" required style="font-size: 1.1rem;">
+                                    <div class="invalid-feedback">Informe o nome.</div>
+                                </div>
+                            </div>
+
+                            <!-- CPF -->
+                            <div class="col-md-5">
+                                <label for="cpf" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CPF <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-person-vcard"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cpf" placeholder="000.000.000-00" maxlength="14" required oninput="mascaraCPF(this)">
+                                    <div class="invalid-feedback">Informe o CPF.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <!-- dtNascimento -->
+                            <div class="col-md-5">
+                                <label for="dtNascimento" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Data de Nascimento<span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-red"><i class="bi bi-calendar-date"></i></span>
+                                    <input type="date" class="form-control border-start-0 ps-0 fw-medium bg-light" id="dtNascimento" required>
+                                    <div class="invalid-feedback">Informe a data de nascimento.</div>
+                                </div>
+                            </div>
+
+                            <!-- Sexo -->
+                            <div class="col-md-3">
+                                <label for="sexo" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Sexo <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <select class="form-select border-start-0 ps-3 fw-medium bg-light" id="sexo" required>
+                                        <option value="" selected disabled>Selecione</option>
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Feminino</option>
+                                    </select>
+                                    <div class="invalid-feedback">Informe o sexo.</div>
+                                </div>
+                            </div>
+
+                            <!-- Experiência -->
+                            <div class="col-md-4">
+                                <label for="experiencia" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Tempo de Experiência<span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-gold"><i class="bi bi-star-fill"></i></span>
+                                    <input type="number" class="form-control border-start-0 ps-0 fw-medium bg-light" id="experiencia" step="0.5" min="0" placeholder="Ex: 2 anos">
+                                    <div class="invalid-feedback">Informe a experiência.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md" id="cargo">
+
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mb-3 text-dark border-bottom pb-2"><i class="bi bi-geo-alt me-2 text-taiko-red"></i>Endereço</h5>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-4">
+                                <label for="cep" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CEP <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-123"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cep" placeholder="00000-000" maxlength="9" required onblur="buscarEndereco()">
+                                    <div class="invalid-feedback">Informe o CEP.</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="estado" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Estado <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-map"></i></span>
+                                    <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="estado" required style="font-size: 1rem;">
+                                        <option value="" selected disabled>UF</option>
+                                        <option value="AC">AC</option>
+                                        <option value="AL">AL</option>
+                                        <option value="AP">AP</option>
+                                        <option value="AM">AM</option>
+                                        <option value="BA">BA</option>
+                                        <option value="CE">CE</option>
+                                        <option value="DF">DF</option>
+                                        <option value="ES">ES</option>
+                                        <option value="GO">GO</option>
+                                        <option value="MA">MA</option>
+                                        <option value="MT">MT</option>
+                                        <option value="MS">MS</option>
+                                        <option value="MG">MG</option>
+                                        <option value="PA">PA</option>
+                                        <option value="PB">PB</option>
+                                        <option value="PR">PR</option>
+                                        <option value="PE">PE</option>
+                                        <option value="PI">PI</option>
+                                        <option value="RJ">RJ</option>
+                                        <option value="RN">RN</option>
+                                        <option value="RS">RS</option>
+                                        <option value="RO">RO</option>
+                                        <option value="RR">RR</option>
+                                        <option value="SC">SC</option>
+                                        <option value="SP">SP</option>
+                                        <option value="SE">SE</option>
+                                        <option value="TO">TO</option>
+                                    </select>
+                                    <div class="invalid-feedback">Informe o estado.</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="cidade" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Cidade <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-buildings"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cidade" placeholder="Nome da cidade" required>
+                                    <div class="invalid-feedback">Informe a cidade.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-9">
+                                <label for="rua" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Rua / Avenida <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-signpost-split"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="rua" placeholder="Endereço principal" required>
+                                    <div class="invalid-feedback">Informe a rua.</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="numero" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Número <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-hash"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="numero" placeholder="123" required oninput="mascaraNumero(this)">
+                                    <div class="invalid-feedback">Informe o número.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label for="bairro" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Bairro <span class="text-danger">*</span></label>
+                                <div class="input-group input-group-lg shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-pin-map"></i></span>
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-pin-map"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="bairro" placeholder="Nome do bairro" required>
+                                    <div class="invalid-feedback">Informe o bairro.</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="complemento" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Complemento</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-door-open"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="complemento" placeholder="Apto, Bloco, etc (Opcional)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="d-flex flex-column flex-md-row justify-content-end gap-3 mt-5 pt-3">
+                            <button type="reset" class="btn btn-light px-4 py-3 fw-semibold text-secondary shadow-sm d-flex align-items-center justify-content-center gap-2" style="border: 1px solid #e5e7eb;">
+                                <i class="bi bi-eraser fs-5"></i> Limpar
+                            </button>
+                            <button type="button" class="btn btn-taiko px-5 py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" onclick="cadastrarMembro()">
+                                <i class="bi bi-check2-circle fs-5"></i> Registrar Membro
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div id="messageBorder" class="modal-content"
+                 style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div id="messageIconContainer"
+                             class=" p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                             style="width: 45px; height: 45px;">
+                            <i class="bi bi-check-circle-fill " style="font-size: 40px; color: darkgreen;"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="mensagemSucesso">Membro
+                                Cadastrado!</h5>
+                            <span id="messageSubtitle" class="text-secondary small fw-bold text-uppercase"
+                                  style="letter-spacing: 0.1em;">Sucesso!</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4 pt-3">
+                    <p id="messageBody" class="mb-0 text-secondary">
+                        Você agora pode continuar cadastrando, ou acessar a lista de membros!
+                    </p>
+                </div>
+
+                <div class="modal-footer border-top-0 pt-0 pe-2 pb-2">
+                    <button type="button" class="btn btn-excluir w-100 fw-bold shadow-sm"
+                            data-bs-dismiss="modal">Continuar Cadastrando
+                    </button>
+                    <button type="button" class="btn btn-alterar w-100 fw-bold shadow-sm"
+                            data-bs-dismiss="modal"
+                            onclick="window.location.href='http://localhost:8080/listarMembros.html';">VER Lista de
+                        Membros
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="messageError" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content"
+                 style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div
+                             class=" p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                             style="width: 45px; height: 45px;">
+                            <i class="bi bi-x-circle-fill " style="font-size: 40px; color: var(--taiko-red);"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="mensagemErro">Erro ao Cadastrar</h5>
+                            <span id="mensagemAuxiliar" class="fst-italic    small "
+                                  style="letter-spacing: 0.1em;">Verifique os dados</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4 pt-3">
+                    <p id="mensagemErroBody" class="mb-0 text-secondary">
+                        Ocorreu um erro ao tentar cadastrar o membro. Verifique os dados inseridos.
+                    </p>
+                </div>
+
+                <div class="modal-footer border-top-0 pt-0 pe-2 pb-2">
+                    <button type="button" class="btn btn-excluir w-100 fw-bold shadow-sm"
+                            data-bs-dismiss="modal">Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="js/sidebars.js"></script>
+<script src="js/script.js"></script>
+<script src="js/cadastrarMembros.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

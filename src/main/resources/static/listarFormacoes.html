@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="auto">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Formações de Palco</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body onload="carregarHome()">
+    <div id="app-wrapper">
+        <div id="mobile-overlay" onclick="toggleSidebar()"></div>
+        <!-- HOMEPAGE -->
+        <aside class="sidebar" id="sidebar"></aside>
+
+        <!-- LAYOUT CUSTOMIZAVEL -->
+        <main class="main-content d-flex flex-column">
+            <nav class="d-md-none bg-white shadow-sm p-3 d-flex justify-content-between align-items-center sticky-top">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle bg-taiko-red d-flex align-items-center justify-content-center"
+                        style="width: 32px; height: 32px;"><span class="text-white font-display fw-bold"
+                            style="font-size: 0.875rem;">F</span></div>
+                    <span class="font-display fw-bold fs-5 text-dark">SHOKUIN</span>
+                </div>
+                <button class="btn btn-link text-dark p-0 text-decoration-none" onclick="toggleSidebar()"><i
+                        class="bi bi-list fs-2"></i></button>
+            </nav>
+
+            <div class="container-fluid p-4 p-md-5 mx-auto" style="max-width: 1000px;">
+                <div class="text-center mb-5">
+                    <h2 class="font-display fw-bold display-6 mb-2 text-dark">Formações de Palco</h2>
+                    <p class="text-muted mx-auto" style="max-width: 500px;">Visualize e gerencie os layouts e
+                        distribuições de instrumentos para as apresentações.</p>
+                </div>
+
+                <div class="glass-panel p-4 p-md-5 shadow-lg position-relative overflow-hidden"
+                    style="border-top: 4px solid var(--taiko-gold); background-color: #ffffff;">
+                    <div class="position-relative z-1">
+                        <div
+                            class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+                            <div class="input-group input-group-lg shadow-sm" style="max-width: 400px;">
+                                <span class="input-group-text bg-light border-end-0 text-secondary"><i
+                                        class="bi bi-search"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light"
+                                    id="busca" placeholder="Pesquisar..." onkeyup="filtrar()" style="font-size: 1rem;">
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary shadow-sm px-4 fw-bold"
+                                    onclick="atualizarTodasCapas()"><i class="bi bi-arrow-clockwise me-2"></i> Atualizar
+                                    Capas</button>
+                                <a href="DefinirFormação.html" class="btn btn-taiko shadow-sm px-4 fw-bold"><i
+                                        class="bi bi-plus-circle me-2"></i> Nova Formação</a>
+                            </div>
+                        </div>
+
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-2" id="cardsContainer">
+                            <!-- Cards gerados via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .formation-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transform-origin: center bottom;
+        }
+
+        .formation-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+            border-color: rgba(212, 175, 55, 0.3);
+            /* taiko-gold com opacidade */
+        }
+
+        .formation-card .card-bg-icon {
+            transition: all 0.6s ease;
+        }
+
+        .formation-card:hover .card-bg-icon {
+            transform: scale(1.2) rotate(-15deg);
+            opacity: 0.15 !important;
+        }
+
+        .stage-btn {
+            background: linear-gradient(135deg, var(--taiko-ink), #2d3748);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .stage-btn:hover {
+            background: linear-gradient(135deg, var(--taiko-red), #c53030);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+        }
+    </style>
+
+    <!-- Modal Edição (Status e Detalhes Básicos) -->
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+                <div class="modal-header bg-taiko-red text-white">
+                    <h5 class="modal-title font-display fw-bold" id="modalEditarLabel"><i
+                            class="bi bi-pencil-square me-2"></i>Editar Informações</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-light">
+                    <form id="formEditar">
+                        <input type="hidden" id="editId">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary small text-uppercase">Nome da
+                                Formação</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i
+                                        class="bi bi-card-text text-taiko-red"></i></span>
+                                <input type="text" class="form-control" id="editNome" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-secondary small text-uppercase">Música</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i
+                                            class="bi bi-music-note-list text-dark"></i></span>
+                                    <input type="text" class="form-control" id="editMusica">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-secondary small text-uppercase">Status</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i
+                                            class="bi bi-info-circle text-taiko-gold"></i></span>
+                                    <select class="form-select" id="editStatus" required>
+                                        <option value="Rascunho">Rascunho</option>
+                                        <option value="Em Edição">Em Edição</option>
+                                        <option value="Pronto">Pronto</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-top-0 bg-light px-4 pb-4">
+                    <button type="button" class="btn btn-secondary px-4 fw-semibold shadow-sm"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-taiko px-4 fw-bold shadow-sm" onclick="salvarEdicao()">Salvar
+                        Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div id="confirmIconContainer"
+                            class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                            style="width: 45px; height: 45px;">
+                            <i id="confirmIcon" class="bi bi-exclamation-triangle fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="confirmModalLabel">Confirmar Ação
+                            </h5>
+                            <span id="confirmSubtitle" class="text-taiko-gold small fw-bold text-uppercase"
+                                style="letter-spacing: 0.1em;">Atenção</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4 pt-3">
+                    <p id="confirmMessage" class="mb-0 text-secondary">
+                        Tem certeza que deseja realizar esta operação? Esta ação não poderá ser desfeita.
+                    </p>
+                </div>
+
+                <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                    <button type="button" class="btn btn-light px-4 fw-semibold text-secondary shadow-sm"
+                        data-bs-dismiss="modal">Não, Cancelar</button>
+                    <button type="button" id="btnConfirmAction" class="btn btn-taiko px-4 fw-bold shadow-sm"
+                        data-bs-dismiss="modal">
+                        Sim, Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div id="messageBorder" class="modal-content"
+                style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div id="messageIconContainer"
+                            class="text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                            style="width: 45px; height: 45px;">
+                            <i id="messageIcon" class="bi bi-check-lg fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="messageTitle">Sucesso!</h5>
+                            <span id="messageSubtitle" class="text-secondary small fw-bold text-uppercase"
+                                style="letter-spacing: 0.1em;">Notificação</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4 pt-3">
+                    <p id="messageBody" class="mb-0 text-secondary">
+                        A operação foi realizada com êxito.
+                    </p>
+                </div>
+
+                <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                    <button type="button" class="btn btn-taiko px-5 fw-bold shadow-sm"
+                        data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Progresso Atualização de Capas -->
+    <div class="modal fade" id="modalProgressoCapas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-body p-4 text-center">
+                    <h5 class="font-display fw-bold text-dark mb-3">Atualizando Capas...</h5>
+                    <p class="text-muted small mb-4" id="textoProgressoCapas">Preparando para atualizar...</p>
+                    <div class="progress mb-3" style="height: 10px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-taiko-red"
+                            id="barraProgressoCapas" role="progressbar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas Oculto para Renderização -->
+    <canvas id="hiddenCanvas" style="display:none;"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/listarFormacoes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

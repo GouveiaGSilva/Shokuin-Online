@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 249 350" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Odaiko">
+    </g>
+    <g id="Okedo" transform="matrix(1,0,0,1,-1225.1079,-1911.083016)">
+        <g id="Chu">
+        </g>
+        <g id="Shime--Corda-" serif:id="Shime (Corda)">
+        </g>
+        <g id="Okedo1" serif:id="Okedo">
+        </g>
+        <g id="Katsugui" transform="matrix(0.406959,0,0,0.72402,790.716341,1604.290673)">
+            <g transform="matrix(1,0,0,1,740.935514,0)">
+                <path d="M899.682,506.209C846.711,608.951 836.212,716.776 899.682,834.431" style="fill:none;stroke:black;stroke-width:14.19px;"/>
+            </g>
+            <g transform="matrix(-1,0,0,1,2004.095007,0)">
+                <path d="M899.682,506.209C846.711,608.951 836.212,716.776 899.682,834.431" style="fill:none;stroke:black;stroke-width:14.19px;"/>
+            </g>
+            <path d="M1372.515,563.08L1372.515,670.32L1421.378,719.183L1421.378,889.789L1430.712,719.434L1477.472,672.674L1477.472,563.08L1486.085,671.076L1528.366,713.358L1528.366,877.034L1537.198,713.045L1583.958,666.285L1583.958,545.861L1591.891,665.126L1631.669,704.903L1640.617,832.919L1640.617,507.722L1631.669,704.903" style="fill:none;stroke:rgb(255,132,124);stroke-width:10.64px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;stroke-dasharray:10.642,10.642;"/>
+            <g transform="matrix(-1,0,0,1,2745.030521,0)">
+                <path d="M1372.515,563.08L1372.515,670.32L1421.378,719.183L1421.378,889.789L1430.712,719.434L1477.472,672.674L1477.472,563.08L1486.085,671.076L1528.366,713.358L1528.366,877.034L1537.198,713.045L1583.958,666.285L1583.958,545.861L1591.891,665.126L1631.669,704.903L1640.617,832.919L1640.617,507.722L1631.669,704.903" style="fill:none;stroke:rgb(255,132,124);stroke-width:10.64px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;stroke-dasharray:10.642,10.642;"/>
+            </g>
+            <g transform="matrix(1,0,0,1,695.439454,492.444892)">
+                <ellipse cx="677.076" cy="340.474" rx="268.102" ry="56.87" style="fill:white;stroke:black;stroke-width:14.19px;stroke-dasharray:14.189,14.189;"/>
+            </g>
+            <g transform="matrix(1,0,0,1,695.439454,165.73565)">
+                <ellipse cx="677.076" cy="340.474" rx="268.102" ry="56.87" style="fill:none;stroke:black;stroke-width:14.19px;"/>
+            </g>
+            <g transform="matrix(2.445167,0,0,1.190813,100.715554,-1771.380937)">
+                <rect x="421.028" y="2042.833" width="198.201" height="62.989" style="fill:white;stroke:black;stroke-width:0.14px;stroke-linejoin:miter;stroke-miterlimit:15;"/>
+            </g>
+            <g transform="matrix(2.736459,0,0,1.456458,-593.920524,-1174.966971)">
+                <g transform="matrix(50,0,0,50,799.02596,1303.03333)">
+                </g>
+                <text x="637.893px" y="1303.033px" style="font-family:'TimesNewRomanPSMT', 'Times New Roman', serif;font-size:50px;">KA<tspan x="704.568px 735.11px " y="1303.033px 1303.033px ">TS</tspan>U</text>
+            </g>
+        </g>
+        <g id="Yoku">
+        </g>
+    </g>
+    <g id="Shime">
+    </g>
+    <g id="Nagado">
+    </g>
+    <g id="Prancheta1" transform="matrix(0.403083,0,0,0.5673,448.446396,389.096355)">
+        <rect x="-1112.54" y="-685.874" width="615.844" height="615.844" style="fill:none;"/>
+    </g>
+</svg>

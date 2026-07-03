@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 680 529" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Odaiko" transform="matrix(1.089288,0,0,1.089288,-351.423851,-463.918202)">
+        <g id="Odaiko-Nagadou" serif:id="Odaiko Nagadou">
+            <g transform="matrix(1,0,0,1,-45.496061,492.444892)">
+                <ellipse cx="677.076" cy="340.474" rx="268.102" ry="56.87" style="fill:none;stroke:black;stroke-width:9.56px;stroke-dasharray:9.563,9.563;"/>
+            </g>
+            <g transform="matrix(1,0,0,1,-45.496061,165.73565)">
+                <ellipse cx="677.076" cy="340.474" rx="268.102" ry="56.87" style="fill:none;stroke:black;stroke-width:9.56px;"/>
+            </g>
+            <path d="M899.682,506.209C928.891,613.791 927.265,723.3 899.682,834.431" style="fill:none;stroke:black;stroke-width:9.56px;"/>
+            <g transform="matrix(-1,0,-0,-1,1263.159492,1340.64053)">
+                <path d="M899.682,506.209C928.891,613.791 927.265,723.3 899.682,834.431" style="fill:none;stroke:black;stroke-width:9.56px;"/>
+            </g>
+            <g id="Alça" transform="matrix(1.434814,0,0,1.379194,-112.733266,-1130.164318)">
+                <g transform="matrix(1,0,0,1,-51.642389,10.793214)">
+                    <path d="M573.623,1264.24C566.123,1278.05 539.373,1305.207 524.429,1313.434" style="fill:none;stroke:black;stroke-width:4.08px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;"/>
+                </g>
+                <g transform="matrix(-1,0,0,1,1095.603266,10.793214)">
+                    <path d="M573.623,1264.24C566.123,1278.05 539.373,1305.207 524.429,1313.434" style="fill:none;stroke:black;stroke-width:4.08px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;"/>
+                </g>
+                <g transform="matrix(1,0,0,-1,-51.642389,2637.661401)">
+                    <path d="M573.623,1264.24C566.123,1278.05 539.373,1305.207 524.429,1313.434" style="fill:none;stroke:black;stroke-width:4.08px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;"/>
+                </g>
+                <g transform="matrix(-1,0,0,-1,1095.603266,2637.661401)">
+                    <path d="M573.623,1264.24C566.123,1278.05 539.373,1305.207 524.429,1313.434" style="fill:none;stroke:black;stroke-width:4.08px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;"/>
+                </g>
+                <g transform="matrix(0.975194,0,0,0.975194,-15.897625,20.506889)">
+                    <circle cx="551.56" cy="1336.883" r="28.787" style="fill:none;stroke:black;stroke-width:4.18px;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:15;"/>
+                </g>
+                <g transform="matrix(1.103249,0,0,0.694456,-86.528066,415.811689)">
+                    <circle cx="551.56" cy="1336.883" r="28.787" style="fill:none;stroke:black;stroke-width:4.39px;stroke-linejoin:miter;stroke-miterlimit:15;stroke-dasharray:4.386,4.386;"/>
+                </g>
+                <g transform="matrix(0.812661,0,0,0.812661,76.439311,238.620407)">
+                    <circle cx="548.249" cy="1335.866" r="6.467" style="stroke:black;stroke-width:5.02px;stroke-linejoin:miter;stroke-miterlimit:15;stroke-dasharray:5.017,5.017;"/>
+                </g>
+            </g>
+        </g>
+        <g id="Odaiko-Okedo" serif:id="Odaiko Okedo">
+        </g>
+    </g>
+    <g id="Okedo">
+    </g>
+    <g id="Shime">
+    </g>
+    <g id="Nagado">
+    </g>
+    <g id="Prancheta1" transform="matrix(1.103829,0,0,0.85867,1228.054025,588.939966)">
+        <rect x="-1112.54" y="-685.874" width="615.844" height="615.844" style="fill:none;"/>
+    </g>
+</svg>

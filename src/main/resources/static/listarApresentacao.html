@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="pt-br" data-bs-theme="auto">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Dantai Fênix</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EW1pVi14HZShWF8KD4Uu3NALLJ7uBalzJA&s" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/agendasStyle.css" rel="stylesheet" />
+    <style>
+        /* Estilos suaves para os cartões */
+        .event-item {
+            background-color: #ffffff !important;
+            border-color: #eaeaea !important;
+            border-left: none !important;
+        }
+        .event-item:hover {
+            background-color: #fafafa !important;
+            border-color: var(--taiko-gold) !important;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06) !important;
+        }
+        .event-item:hover .event-date-box, .event-item:hover .event-date-box::before {
+            background-color: transparent !important;
+        }
+    </style>
+</head>
+
+<body onload="carregarHome(); listarApresentacao(); verificarLogin();">
+
+<div id="dropdown" class="dropdown-menu" style="position: fixed; display: none; z-index: 1050;">
+</div>
+
+<div id="app-wrapper">
+        <!-- SIDEBAR -->
+        <div id="mobile-overlay" onclick="toggleSidebar()"></div>
+        <aside class="sidebar" id="sidebar"></aside>
+
+        <main class="main-content d-flex flex-column">
+
+            <!-- Navbar Mobile (Aparece apenas em telas pequenas) -->
+            <nav class="d-md-none bg-white shadow-sm p-3 d-flex justify-content-between align-items-center sticky-top">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle bg-taiko-red d-flex align-items-center justify-content-center"
+                        style="width: 32px; height: 32px;">
+                        <span class="text-white font-display fw-bold" style="font-size: 0.875rem;">F</span>
+                    </div>
+                    <span class="font-display fw-bold fs-5 text-dark">SHOKUIN</span>
+                </div>
+                <button class="btn btn-link text-dark p-0 text-decoration-none" onclick="toggleSidebar()">
+                    <i class="bi bi-list fs-2"></i>
+                </button>
+            </nav>
+
+        <div class="container-fluid p-4 p-md-5 mx-auto" style="max-width: 1400px;">
+
+            <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+                <div>
+                    <h2 class="font-display fw-bold display-6 mb-1 text-dark">Apresentações</h2>
+                    <p class="text-secondary mb-0">Acompanhe todas as apresentações criadas e agendadas.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="definirApresentacao.html" class="btn btn-taiko shadow-sm px-4 fw-bold">
+                        <i class="bi bi-plus-circle me-2"></i> Nova Apresentação
+                    </a>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Pesquisar apresentação por nome..." onkeyup="filtrarApresentacoes()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid container -->
+            <div id="lista-agendas" class="row g-4">
+            </div>
+
+               <div class="modal fade" id="alterarApre" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold); background-color: #fff;">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-taiko-gold text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                                <i class="bi bi-pencil-square fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title font-display fw-bold text-dark" id="editModalLabel">Atualizar Nome da Apresentação</h5>
+                                <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Atualizar informações</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 pt-3">
+                        <form id="formAtualizacao">
+                            <div class="mb-4">
+                                <label for="nomeA" class="form-label text-secondary fw-medium small text-uppercase" style="letter-spacing: 0.05em;">Nome da Apresentação</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text border-end-0 bg-light" style="color: var(--taiko-gold); border-color: #ddd;"><i class="bi bi-tag-fill"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium text-dark bg-light" id="nomeA" style="border-color: #ddd;" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-top-0 pt-0 px-0 pb-2 d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-light border px-4 py-2 fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn px-4 py-2 fw-bold shadow-sm" style="background-color: var(--taiko-gold); color: #fff;" id="btnConfirmaAlterar">
+                                    <i class="bi bi-check2-circle"></i> Salvar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deletarApre" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%">
+                <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold); background-color: #fff;">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                                <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title font-display fw-bold text-dark">Aviso</h5>
+                                <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Excluir Apresentação</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 pt-3">
+                        <p class="modal-title fw-bold text-dark">Realmente deseja excluir esta apresentação?</p>
+                        <div class="modal-footer border-top-0 pt-4 pe-4 pb-4">
+                            <button type="button" class="btn btn-light border px-4 fw-bold shadow-sm" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </button>
+                            <button type="button" class="btn btn-taiko px-4 fw-bold shadow-sm d-flex align-items-center gap-2" data-bs-dismiss="modal" id="btnConfirmaApre">
+                                <i class="bi bi-trash3"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> </div>
+        </div>
+
+        <div class="modal fade" id="deletarDoc" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%">
+                <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                                <i class="bi bi-pencil-square fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title font-display fw-bold text-dark">Aviso</h5>
+                                <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Excluir Documento</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 pt-3" style="margin-bottom: -5%">
+                        <p class="modal-title font-display fw-bold text-dark" >Deseja realmente excluir?<br><strong>Essa ação é irreversível!</strong></p>
+                        <br>
+                        <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                            <button type="button" class="btn btn-light px-4 fw-semibold text-secondary shadow-sm" data-bs-dismiss="modal">Cancelar</button>
+                            <button id="btConfirma" class="btn btn-taiko px-4 fw-bold shadow-sm d-flex align-items-center gap-2" data-bs-dismiss="modal" onclick="deletarDoc()">
+                                <i class="bi bi-save"></i> Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalSucessoGenerico" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%">
+                <div class="modal-content" style="border: none; border-top: 4px solid #198754; background-color: #fff;">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-success text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                                <i class="bi bi-check-circle-fill fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title font-display fw-bold text-dark">Sucesso</h5>
+                                <span class="text-success small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Operação Concluída</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body p-4 pt-3">
+                        <p id="textoSucessoGenerico" class="fw-medium text-dark mb-4"></p>
+                        <div class="modal-footer border-top-0 p-0 d-flex justify-content-end">
+                            <button type="button" class="btn btn-success px-4 fw-bold shadow-sm" data-bs-dismiss="modal" onclick="window.location.reload()">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalErroGenerico" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%">
+                <div class="modal-content" style="border: none; border-top: 4px solid #dc3545; background-color: #fff;">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-danger text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                                <i class="bi bi-x-circle-fill fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title font-display fw-bold text-dark">Erro</h5>
+                                <span class="text-danger small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Falha na Operação</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 pt-3">
+                        <p id="textoErroGenerico" class="fw-medium text-dark mb-4"></p>
+                        <div class="modal-footer border-top-0 p-0 d-flex justify-content-end">
+                            <button type="button" class="btn btn-danger px-4 fw-bold shadow-sm" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/sidebars.js"></script>
+<script src="js/script.js"></script>
+<script src="js/relatorioFormacaoApresentacao.js"></script>
+<script src="js/listarApresentacao.js"></script>
+</body>
+</html>

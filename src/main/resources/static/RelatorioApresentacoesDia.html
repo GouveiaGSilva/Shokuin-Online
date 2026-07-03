@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="auto">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Relatório de Apresentações</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EW1pVi14HZShWF8KD4Uu3NALLJ7uBalzJA&s" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body onload="carregarHome()">
+<div id="app-wrapper">
+
+    <div id="mobile-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-content d-flex flex-column position-relative">
+
+        <nav class="d-md-none bg-white shadow-sm p-3 d-flex justify-content-between align-items-center sticky-top">
+            <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle bg-taiko-red d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                    <span class="text-white font-display fw-bold" style="font-size: 0.875rem;">F</span>
+                </div>
+                <span class="font-display fw-bold fs-5 text-dark">SHOKUIN</span>
+            </div>
+            <button class="btn btn-link text-dark p-0 text-decoration-none" onclick="toggleSidebar()">
+                <i class="bi bi-list fs-2"></i>
+            </button>
+        </nav>
+
+        <div class="container-fluid p-4 p-md-5 mx-auto position-relative" style="max-width: 1100px;">
+
+            <div class="text-center mb-5 mt-md-0 mt-3">
+                <h2 class="font-display fw-bold display-6 mb-2 text-dark">Relatório de Apresentações</h2>
+                <p class="text-muted mx-auto" style="max-width: 500px;">Filtre apresentações por período para visualizar na tela ou gerar um documento</p>
+            </div>
+
+            <div class="glass-panel p-4 p-md-5 shadow-lg position-relative overflow-hidden" style="border-top: 4px solid var(--taiko-gold); background-color: #ffffff;">
+                <i class="bi bi-calendar-range position-absolute" style="font-size: 18rem; right: -40px; bottom: -60px; opacity: 0.03; z-index: 0; color: var(--taiko-ink); transform: rotate(-15deg);"></i>
+
+                <div class="position-relative z-1">
+
+                    <form id="formRelatorio" onsubmit="event.preventDefault(); carregarTabelaApresentacoes();">
+                        <div class="d-flex flex-column flex-md-row align-items-end mb-4 gap-3">
+                            <div style="min-width: 25%">
+                                <label for="dataIni" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Início</label>
+                                <input type="date" class="form-control fw-medium bg-light" id="dataIni" required>
+                            </div>
+                            <div style="min-width: 25%">
+                                <label for="dataFim" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Fim</label>
+                                <input type="date" class="form-control fw-medium bg-light" id="dataFim" required>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: flex-end; flex-grow: 1; gap: 10px;">
+                                <button type="submit" class="btn btn-taiko shadow-sm px-5 fw-bold" style="font-size: 15px">
+                                    <i class="bi bi-search me-2" ></i> Buscar
+                                </button>
+                                <button type="button" class="btn btn-taiko shadow-sm px-5 fw-bold" style="font-size: 15px" onclick="baixarRelatorioApresentacoesPDF()">
+                                    <i class="bi bi-file-earmark-pdf me-2"></i> Gerar PDF
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="table-responsive mt-4">
+                        <table id="tabela" class="table table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th style="min-width: 15%">Data</th>
+                                <th style="min-width: 15%">Horário</th>
+                                <th style="min-width: 25%">Apresentação</th>
+                                <th style="min-width: 45%">Local</th>
+                            </tr>
+                            </thead>
+                            <tbody id="resultadoApresentacoes">
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted p-4">Pesquise por um período para exibir as apresentações.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalMsg" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="margin: 0 auto; width: 30%; min-width: 320px;">
+                <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                                <i class="bi bi-info-circle fs-5" id="iconeModal"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title font-display fw-bold text-dark">Aviso</h5>
+                                <span id="subtitulo" class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Status do PDF</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 pt-3" style="margin-bottom: -5%">
+                        <p id="msg" class="modal-title font-display fw-bold text-dark">Gerando relatório...</p>
+                        <div class="modal-footer border-top-0 pt-0 pe-4 pb-4 mt-3">
+                            <button type="button" class="btn btn-taiko px-4 fw-bold shadow-sm d-flex align-items-center gap-2" data-bs-dismiss="modal">
+                                <i class="bi bi-check2"></i> Fechar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="js/script.js"></script>
+<script src="js/relatorioApresentacoesDia.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</body>
+</html>

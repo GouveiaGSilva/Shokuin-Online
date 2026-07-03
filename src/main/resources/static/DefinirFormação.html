@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="auto">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Formação de Palco</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="css/formacaoPalco.css" rel="stylesheet" />
+</head>
+
+
+<body>
+<!-- Navbar Superior -->
+<nav class="editor-navbar d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+        <a href="index.html"
+           class="text-white text-decoration-none d-flex align-items-center gap-2 me-3 transition-hover"
+           style="opacity: 0.9;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">
+            <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center"
+                 style="width: 28px; height: 28px;">
+                <i class="bi bi-arrow-left"></i>
+            </div>
+            <span class="fw-bold font-display tracking-widest text-uppercase d-none d-sm-inline"
+                  style="letter-spacing: 1px; font-size: 0.85rem;">Voltar ao Sistema</span>
+        </a>
+
+        <a href="listarFormacoes.html" class="btn btn-sm btn-outline-light d-flex align-items-center gap-2 me-2"
+           style="border-color: rgba(255,255,255,0.4); font-size: 0.85rem; font-weight: 600; padding: 0.4rem 0.8rem;">
+            <i class="bi bi-collection-play-fill fs-6"></i>
+            <span class="d-none d-md-inline">Ver Formações</span>
+        </a>
+
+
+        <div class="vr bg-light opacity-25 mx-1" style="height: 24px;"></div>
+
+
+        <div class="dropdown">
+            <button class="nav-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-plus-lg me-1"></i> Criar
+            </button>
+            <ul class="dropdown-menu shadow">
+                <li><a class="dropdown-item" href="#"><i class="bi bi-layout-wtf me-2 text-primary"></i><button
+                        onclick="limpar()">Nova
+                    Formação</button></a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-copy me-2 text-secondary"></i>Modelo
+                    Existente</a></li>
+            </ul>
+        </div>
+
+
+        <div class="dropdown">
+            <button class="nav-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-floppy me-1"></i> Salvar
+            </button>
+            <ul class="dropdown-menu shadow">
+                <li><a class="dropdown-item" href="#"><i class="bi bi-cloud-arrow-up me-2 text-success"></i><button
+                        onclick="salvarFormacao()" class="btn">Salvar Formação</button>
+                </a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-plus me-2 text-primary"></i><button
+                        onclick="abrirModalNovaFormacao()" class="btn">Salvar como nova formação</button>
+                </a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-camera me-2 text-secondary"></i><button
+                        onclick="baixarPrint()" class="btn">Baixar print</button>
+                </a></li>
+
+
+            </ul>
+        </div>
+
+        <div class="dropdown">
+            <button class="nav-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" onclick="atualizarListaFormacoes()">
+                <i class="bi bi-pencil-square me-1"></i> Editar
+            </button>
+            <div class="dropdown-menu shadow p-2" style="min-width: 250px;">
+                <div class="input-group input-group-sm mb-2">
+                    <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" id="buscaFormacaoMenu" class="form-control border-start-0 ps-0" placeholder="Pesquisar formação..." onkeyup="filtrarFormacoesMenu()">
+                </div>
+                <div id="listaFormacoesContainer" class="list-group custom-scroll" style="max-height: 200px; overflow-y: auto;">
+                    <!-- Itens renderizados aqui pelo JS -->
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="d-flex align-items-center">
+        <div class="dropdown">
+            <button class="nav-btn dropdown-toggle border-0" type="button" data-bs-toggle="dropdown"
+                    style="background: rgba(255,255,255,0.1);">
+                <i class="bi bi-person-circle me-1"></i> Usuário Logado
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li><a class="dropdown-item" href="#">Configurações</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item text-danger" href="#">Sair</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="editor-sub-nav d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="d-flex align-items-center flex-wrap gap-3">
+        <h4 class="m-0 font-display fw-bold fs-5 d-flex align-items-center" style="color: var(--taiko-ink);">
+            <div class="bg-taiko-red rounded-1 me-3 has-validation" style="width: 4px; height: 24px;"
+                 id="tituloDiv">
+            </div>
+            <div class="d-flex flex-column position-relative">
+                <input type="text" value="" class="border border-secondary px-2 py-1 rounded" id="tituloFormacao" oninput="ocultarAvisoTituloFormacao()" style="outline: none;">
+                <div style="display: none; position: absolute; top: 100%; left: 0; font-family: system-ui, -apple-system, sans-serif; font-size: 0.75rem; font-weight: 600; white-space: nowrap;" id="msgtitulo" class="text-danger mt-1">
+                    <i class="bi bi-exclamation-circle me-1" style="font-size: 0.7rem;"></i>Título obrigatório.
+                </div>
+            </div>
+
+            <button class="btn" onclick="editarTitulo()"><i class="bi bi-pencil ms-3 text-muted"
+                                                            style="font-size: 0.9rem; cursor: pointer;"></i></button>
+        </h4>
+
+        <div class="vr bg-secondary opacity-25 d-none d-md-block" style="height: 24px;"></div>
+
+        <!-- Controle de Zoom de Inserção -->
+        <div id="toolbarZoomInsercao" class="d-flex align-items-center bg-white border rounded-3 shadow-sm px-2"
+             style="font-size: 0.75rem; height: 30px; gap: 5px;" title="Tamanho inicial ao inserir um instrumento">
+            <i class="bi bi-zoom-in text-taiko-gold"></i>
+            <label for="inputFatorZoom" class="fw-bold text-secondary mb-0" style="white-space: nowrap;">Escala:</label>
+            <input type="number" id="inputFatorZoom" class="form-control form-control-sm border-0 p-0 text-center fw-bold text-dark"
+                   value="0.3" step="0.1" min="0.1" max="5.0" style="width: 40px; height: 20px; outline: none; box-shadow: none; background: transparent;">
+        </div>
+
+        <div class="vr bg-secondary opacity-25 d-none d-md-block" style="height: 24px;"></div>
+
+        <!-- Toolbar de Texto Compacta (Sempre Visível) -->
+        <div id="toolbarTexto" class="d-flex align-items-center bg-white border rounded-3 shadow-sm"
+             style="font-size: 0.75rem; padding: 2px 4px; gap: 3px;">
+            <!-- Botão de Inserir Texto -->
+            <button type="button" class="btn btn-sm btn-outline-taiko-gold d-flex align-items-center gap-1"
+                    id="btnAdicionarTexto" onclick="insereTexto()" title="Inserir Novo Texto"
+                    style="height: 26px; font-size: 0.7rem; padding: 0 6px !important;">
+                <i class="bi bi-file-earmark-font" style="font-size: 0.85rem;"></i>
+                <span class="fw-bold">Inserir</span>
+            </button>
+
+            <div class="vr bg-secondary opacity-25" style="height: 18px; margin: 0 2px;"></div>
+
+            <!-- Controles de Estilização -->
+            <div id="controlesEstiloTexto" class="d-flex align-items-center flex-wrap" style="gap: 3px;">
+                <!-- Família de Fonte -->
+                <select id="textFontFamily"
+                        class="form-select form-select-sm p-0 ps-1 pe-3 fw-medium bg-light border text-start"
+                        style="font-size: 0.7rem; width: 75px; height: 26px;" title="Família da Fonte">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times N.</option>
+                    <option value="Courier New">Courier</option>
+                    <option value="Noto Sans">Noto S.</option>
+                    <option value="Cinzel">Cinzel</option>
+                    <option value="Comic Sans MS">Comic S.</option>
+                </select>
+
+                <!-- Tamanho da Fonte -->
+                <input type="number" id="textFontSize"
+                       class="form-control form-control-sm text-center bg-light border p-0"
+                       style="width: 38px; font-size: 0.7rem; height: 26px;" min="8" max="150" value="20"
+                       title="Tamanho da Fonte">
+
+                <!-- Estilos (Bold / Italic) -->
+                <div class="btn-group shadow-none" style="height: 26px; gap: 1px;">
+                    <button type="button" id="btnTextBold" class="btn btn-sm btn-light border p-0 text-dark"
+                            style="font-size: 0.7rem; width: 22px;" title="Negrito">
+                        <i class="bi bi-type-bold"></i>
+                    </button>
+                    <button type="button" id="btnTextItalic" class="btn btn-sm btn-light border p-0 text-dark"
+                            style="font-size: 0.7rem; width: 22px;" title="Itálico">
+                        <i class="bi bi-type-italic"></i>
+                    </button>
+                </div>
+
+                <!-- Dropdown de Cores (Fonte, Realce, Fundo da Caixa) -->
+                <div class="dropdown" style="height: 26px;">
+                    <button type="button"
+                            class="btn btn-sm btn-light border text-dark dropdown-toggle d-flex align-items-center gap-1"
+                            style="font-size: 0.7rem; height: 26px; padding: 0 5px !important;"
+                            data-bs-toggle="dropdown" data-bs-auto-close="outside" title="Cores do Texto">
+                        <i class="bi bi-palette"></i> Cores
+                    </button>
+                    <div class="dropdown-menu p-3 shadow border-secondary-subtle"
+                         style="width: 220px; font-size: 0.75rem;">
+                        <!-- Cor da Letra -->
+                        <div class="mb-3">
+                            <label for="textFill"
+                                   class="form-label text-muted mb-1 small text-uppercase fw-semibold">Cor da
+                                Letra</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="color" id="textFill" class="form-control form-control-color p-0 border"
+                                       style="height: 28px; width: 35px; cursor: pointer;" value="#000000">
+                                <span class="text-secondary small">Preenchimento principal</span>
+                            </div>
+                        </div>
+                        <!-- Cor do Realce -->
+                        <div class="mb-3">
+                            <div class="form-check form-switch mb-1">
+                                <input class="form-check-input" type="checkbox" id="textHasHighlight"
+                                       style="cursor: pointer;">
+                                <label class="form-check-label fw-bold" for="textHasHighlight">Marca-texto</label>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="color" id="textHighlightColor"
+                                       class="form-control form-control-color p-0 border"
+                                       style="height: 28px; width: 35px; cursor: pointer;" value="#ffff00">
+                                <span class="text-secondary small">Fundo das letras</span>
+                            </div>
+                        </div>
+                        <!-- Cor de Fundo da Caixa -->
+                        <div>
+                            <div class="form-check form-switch mb-1">
+                                <input class="form-check-input" type="checkbox" id="textHasBg"
+                                       style="cursor: pointer;">
+                                <label class="form-check-label fw-bold" for="textHasBg">Fundo da Caixa</label>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="color" id="textBgColor"
+                                       class="form-control form-control-color p-0 border"
+                                       style="height: 28px; width: 35px; cursor: pointer;" value="#ffffff">
+                                <span class="text-secondary small">Retângulo externo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contorno (stroke / strokeWidth) -->
+                <div class="dropdown" style="height: 26px;">
+                    <button type="button"
+                            class="btn btn-sm btn-light border text-dark dropdown-toggle d-flex align-items-center gap-1"
+                            style="font-size: 0.7rem; height: 26px; padding: 0 5px !important;"
+                            data-bs-toggle="dropdown" data-bs-auto-close="outside" title="Contorno/Borda da Letra">
+                        <i class="bi bi-border-outer"></i> Borda
+                    </button>
+                    <div class="dropdown-menu p-3 shadow border-secondary-subtle"
+                         style="width: 220px; font-size: 0.75rem;">
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="textHasStroke"
+                                   style="cursor: pointer;">
+                            <label class="form-check-label fw-bold" for="textHasStroke">Habilitar Borda</label>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label text-muted mb-1 small text-uppercase fw-semibold">Cor da
+                                Borda</label>
+                            <input type="color" id="textStrokeColor"
+                                   class="form-control form-control-color w-100 p-0 border"
+                                   style="height: 28px; cursor: pointer;" value="#ff0000">
+                        </div>
+                        <div>
+                            <label class="form-label text-muted mb-1 small text-uppercase fw-semibold">Espessura:
+                                <span id="valStrokeWidth">1</span>px</label>
+                            <input type="range" id="textStrokeWidth" class="form-range" min="1" max="15" value="1">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sombra (shadow) -->
+                <div class="dropdown" style="height: 26px;">
+                    <button type="button"
+                            class="btn btn-sm btn-light border text-dark dropdown-toggle d-flex align-items-center gap-1"
+                            style="font-size: 0.7rem; height: 26px; padding: 0 5px !important;"
+                            data-bs-toggle="dropdown" data-bs-auto-close="outside" title="Sombra do Texto">
+                        <i class="bi bi-shadows"></i> Sombra
+                    </button>
+                    <div class="dropdown-menu p-3 shadow border-secondary-subtle"
+                         style="width: 240px; font-size: 0.75rem;">
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="textHasShadow"
+                                   style="cursor: pointer;">
+                            <label class="form-check-label fw-bold" for="textHasShadow">Habilitar Sombra</label>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label text-muted mb-1 small text-uppercase fw-semibold">Cor da
+                                Sombra</label>
+                            <input type="color" id="textShadowColor"
+                                   class="form-control form-control-color w-100 p-0 border"
+                                   style="height: 28px; cursor: pointer;" value="#000000">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label text-muted mb-1 small text-uppercase fw-semibold">Desfoque:
+                                <span id="valShadowBlur">5</span>px</label>
+                            <input type="range" id="textShadowBlur" class="form-range" min="0" max="30" value="5">
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label class="form-label text-muted mb-1 small text-uppercase fw-semibold">Offset X:
+                                    <span id="valShadowOffsetX">3</span>px</label>
+                                <input type="number" id="textShadowOffsetX"
+                                       class="form-control form-control-sm text-center" min="-30" max="30" value="3">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-muted mb-1 small text-uppercase fw-semibold">Offset Y:
+                                    <span id="valShadowOffsetY">3</span>px</label>
+                                <input type="number" id="textShadowOffsetY"
+                                       class="form-control form-control-sm text-center" min="-30" max="30" value="3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex align-items-center bg-white rounded-pill shadow-sm px-3 py-1 border"
+         style="border-color: var(--taiko-gold) !important; transition: all 0.2s;"
+         onmouseover="this.classList.add('shadow')"
+         onmouseout="this.classList.remove('shadow'); this.classList.add('shadow-sm')">
+        <i class="bi bi-music-note-list text-taiko-red me-2 fs-5"></i>
+        <span class="text-muted fw-bold me-2" style="font-size: 0.85rem;">Música:</span>
+        <input type="text" id="buscaMusica" placeholder="Pesquisar..." class="form-control form-control-sm border-0 p-0 px-1 me-2" style="width: 100px; box-shadow: none; background-color: #f8f9fa;" onkeyup="filtrarMusicas()">
+        <select id="listaMusicas" class="form-select border-0 fw-bold text-dark p-0 ps-1 pe-4"
+                style="box-shadow: none; width: auto; min-width: 160px; background-color: transparent; cursor: pointer; text-overflow: ellipsis;">
+
+        </select>
+    </div>
+</div>
+
+<!-- Área de edição Instrumentos -->
+<div class="editor-container">
+
+    <!-- Barra de Ferramentas Inferior: Grade e Configurações do Palco -->
+    <div class="panel-left">
+        <ul class="nav nav-tabs nav-fill" id="leftPanelTabs" role="tablist">
+            <li class="nav-item" role="presentation" title="Instrumentos">
+                <button class="nav-link active rounded-0 text-dark d-flex flex-column align-items-center py-2"
+                        id="instruments-tab" data-bs-toggle="tab" data-bs-target="#instruments-tab-pane" type="button"
+                        role="tab" aria-controls="instruments-tab-pane" aria-selected="true"
+                        style="font-size: 0.75rem; font-weight: 600;"
+                        onclick="document.querySelector('.panel-left').classList.remove('config-mode')">
+                    <i class="bi bi-music-note-beamed fs-5 mb-1"></i>
+                    <span class="tab-text">Inst</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation" title="Configurar Palco">
+                <button class="nav-link rounded-0 text-dark d-flex flex-column align-items-center py-2"
+                        id="config-tab" data-bs-toggle="tab" data-bs-target="#config-tab-pane" type="button" role="tab"
+                        aria-controls="config-tab-pane" aria-selected="false"
+                        style="font-size: 0.75rem; font-weight: 600;"
+                        onclick="document.querySelector('.panel-left').classList.add('config-mode')">
+                    <i class="bi bi-sliders fs-5 mb-1"></i>
+                    <span class="tab-text">Config</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content flex-grow-1 overflow-hidden" id="leftPanelTabsContent">
+            <!-- Aba de Instrumentos -->
+            <div class="tab-pane fade show active h-100" id="instruments-tab-pane" role="tabpanel"
+                 aria-labelledby="instruments-tab" tabindex="0">
+                
+                <div class="d-flex flex-column h-100">
+                    <!-- Barra de pesquisa -->
+                    <div class="p-2 border-bottom">
+                        <div class="input-group input-group-sm w-100 shadow-sm">
+                            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" id="buscaInstrumento" class="form-control border-start-0 ps-0" placeholder="Pesquisar..." onkeyup="filtrarInstrumentos()">
+                        </div>
+                    </div>
+
+                    <div class="intrument-dock custom-scroll flex-grow-1" id="barraFerramentas" style="padding-top: 1rem; overflow-y: auto;">
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba de Configurações -->
+            <div class="tab-pane fade h-100 custom-scroll overflow-y-auto p-3" id="config-tab-pane" role="tabpanel"
+                 aria-labelledby="config-tab" tabindex="0">
+                <div class="d-flex flex-column gap-4">
+                    <!-- Grade do Palco -->
+                    <div>
+                        <label class="text-dark mb-2 fw-medium" style="font-size: 0.85rem;"><i
+                                class="bi bi-grid-3x3 text-muted me-2"></i>Grade do Palco</label>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input mt-0" type="checkbox" role="switch" id="showGrid"
+                                       checked style="cursor: pointer;">
+                                <label class="form-check-label text-dark" style="font-size: 0.8rem;"
+                                       for="showGrid">Exibir</label>
+                            </div>
+                        </div>
+                        <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light border-secondary-subtle"
+                                      style="font-size: 0.75rem;">Cols</span>
+                            <input type="number" id="gridCols"
+                                   class="form-control border-secondary-subtle text-center" value="10" min="2"
+                                   max="50">
+                            <span class="input-group-text bg-light border-secondary-subtle"
+                                  style="font-size: 0.75rem;">Lins</span>
+                            <input type="number" id="gridRows"
+                                   class="form-control border-secondary-subtle text-center" value="8" min="2" max="50">
+                        </div>
+                    </div>
+
+                    <!-- Dimensões do Palco -->
+                    <div>
+                        <label class="text-dark mb-2 fw-medium" style="font-size: 0.85rem;"><i
+                                class="bi bi-bounding-box text-muted me-2"></i>Dimensão (m)</label>
+                        <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light border-secondary-subtle"
+                                      style="font-size: 0.75rem;">Larg</span>
+                            <input type="number" id="stageWidth"
+                                   class="form-control border-secondary-subtle text-center" value="14" min="5"
+                                   max="30">
+                            <span class="input-group-text bg-light border-secondary-subtle"
+                                  style="font-size: 0.75rem;">Prof</span>
+                            <input type="number" id="stageHeight"
+                                   class="form-control border-secondary-subtle text-center" value="8" min="5" max="30">
+                        </div>
+                    </div>
+
+                    <!-- Alinhamento -->
+                    <div>
+                        <label class="text-dark mb-2 fw-medium" style="font-size: 0.85rem;"><i
+                                class="bi bi-align-center text-muted me-2"></i>Guias</label>
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input mt-0" type="checkbox" role="switch" id="showCenterGuides"
+                                   checked style="cursor: pointer;">
+                            <label class="form-check-label text-dark" style="font-size: 0.8rem;"
+                                   for="showCenterGuides">Linha Central</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Palco -->
+    <div class="stage-canvas">
+
+        <!-- Container do Palco -->
+        <div class="stage-boundary" id="stageBoundary">
+            <canvas id="Canvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Lista de Participantes -->
+    <div class="panel-right d-flex flex-column">
+        <div class="panel-title d-flex flex-column align-items-center pt-3 pb-0 border-bottom-0">
+            <span class="mb-2">Tocadores</span>
+            <ul class="nav nav-tabs w-100" id="tabsTocadores" role="tablist" style="font-size: 0.8rem; font-weight: 600;">
+                <li class="nav-item flex-grow-1 text-center" role="presentation">
+                    <button class="nav-link active w-100 px-1 py-2 text-dark rounded-0 border-start-0" id="tab-todos-tocadores" data-bs-toggle="tab" data-bs-target="#tab-pane-todos" type="button" role="tab" onclick="modoListaTocadores = 'geral'; atualizarPainelParticipantes();">Todos</button>
+                </li>
+                <li class="nav-item flex-grow-1 text-center" role="presentation">
+                    <button class="nav-link w-100 px-1 py-2 text-dark rounded-0 border-end-0" id="tab-formacao-tocadores" data-bs-toggle="tab" data-bs-target="#tab-pane-formacao" type="button" role="tab" onclick="modoListaTocadores = 'formacao'; atualizarPainelParticipantes();">Da Formação</button>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="input-group input-group-sm w-100 shadow-sm px-2 mt-2 mb-1">
+            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+            <input type="text" id="buscaMembroPainel" class="form-control border-start-0 ps-0" placeholder="Pesquisar..." onkeyup="atualizarPainelParticipantes()">
+        </div>
+
+        <div class="tab-content flex-grow-1 overflow-hidden d-flex flex-column" id="tabsTocadoresContent">
+            <!-- Aba Todos -->
+            <div class="tab-pane fade show active h-100" id="tab-pane-todos" role="tabpanel" tabindex="0">
+                <div class="d-flex flex-column h-100">
+                    <div id="listaMembros" class="flex-grow-1 overflow-y-auto custom-scroll p-1">
+                        <!-- Participantes Globais -->
+                    </div>
+                </div>
+            </div>
+            <!-- Aba Formacao -->
+            <div class="tab-pane fade h-100" id="tab-pane-formacao" role="tabpanel" tabindex="0">
+                <div class="d-flex flex-column h-100">
+                    <div class="px-2 py-1 text-center border-bottom bg-light">
+                        <button class="btn btn-sm btn-outline-taiko-red fw-bold w-100" onclick="abrirModalAdicionarTocadorFormacao()"><i class="bi bi-plus-circle me-1"></i> Adicionar</button>
+                    </div>
+                    <div id="listaMembrosFormacaoPanel" class="flex-grow-1 overflow-y-auto custom-scroll p-1">
+                        <!-- Participantes da Formação -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Painel Atribuir Tocador (Posicionamento absoluto original, com novo design de layout) -->
+<div id="painelTocador"
+     style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--taiko-paper); border-top: 4px solid var(--taiko-gold); padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); z-index: 1000; width: 320px; border-radius: 0 !important;">
+
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+             style="width: 35px; height: 35px; border-radius: 50% !important;">
+            <i class="bi bi-person-fill fs-6"></i>
+        </div>
+        <div>
+            <h6 class="font-display fw-bold text-dark mb-0" style="font-size: 0.95rem;">Atribuir Músico</h6>
+            <span class="text-taiko-gold small fw-bold text-uppercase"
+                  style="letter-spacing: 0.05em; font-size: 0.65rem;">Definir tocador</span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-semibold text-secondary small text-uppercase mb-2" style="letter-spacing: 0.05em; font-size: 0.7rem;">Selecione o tocador:</label>
+        <div class="input-group shadow-sm mb-2">
+            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+            <input type="text" id="buscaMembroModal" class="form-control border-start-0 ps-0" placeholder="Pesquisar músico..." onkeyup="filtrarMembrosModal()">
+        </div>
+
+        <div id="listaMembrosModal" class="list-group custom-scroll shadow-sm border border-secondary-subtle rounded-2" style="max-height: 150px; overflow-y: auto;">
+            <!-- Itens serão renderizados aqui pelo JS -->
+        </div>
+        <input type="hidden" id="tocadorSelecionadoId" value="">
+        <input type="hidden" id="tocadorSelecionadoNome" value="">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-semibold text-secondary small text-uppercase mb-2" style="letter-spacing: 0.05em; font-size: 0.7rem;">Apelido (opcional):</label>
+        <input type="text" id="apelidoTocador" class="form-control form-control-sm shadow-sm" placeholder="Nome a exibir no palco...">
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button class="btn btn-light py-1 px-3 fw-semibold text-secondary shadow-sm"
+                style="font-size: 0.8rem; padding: 0.4rem 1.2rem !important;"
+                onclick="fecharPainelTocador()">Cancelar</button>
+        <button class="btn btn-taiko py-1 px-3 fw-bold shadow-sm"
+                style="font-size: 0.8rem; padding: 0.4rem 1.2rem !important;"
+                onclick="salvarTocador()">Confirmar</button>
+    </div>
+</div>
+
+<!-- Painel de Rotação (Inclinação) -->
+<div id="painelRotacao"
+     style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--taiko-paper); border-top: 4px solid var(--taiko-gold); padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); z-index: 1000; width: 320px; border-radius: 0 !important;">
+
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+             style="width: 35px; height: 35px; border-radius: 50% !important;">
+            <i class="bi bi-arrow-repeat fs-6"></i>
+        </div>
+        <div>
+            <h6 class="font-display fw-bold text-dark mb-0" style="font-size: 0.95rem;">Inclinação</h6>
+            <span class="text-taiko-gold small fw-bold text-uppercase"
+                  style="letter-spacing: 0.05em; font-size: 0.65rem;">Girar objeto</span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-semibold text-secondary small text-uppercase mb-2" style="letter-spacing: 0.05em; font-size: 0.7rem;">Ângulo (graus):</label>
+        <div class="d-flex align-items-center gap-2">
+            <input type="range" id="rangeRotacao" class="form-range flex-grow-1" min="0" max="360" value="0" oninput="document.getElementById('inputRotacao').value = this.value; atualizarRotacaoObjeto(this.value)">
+            <input type="number" id="inputRotacao" class="form-control form-control-sm text-center shadow-sm" style="width: 70px;" min="0" max="360" value="0" oninput="document.getElementById('rangeRotacao').value = this.value; atualizarRotacaoObjeto(this.value)">
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button class="btn btn-taiko py-1 px-3 fw-bold shadow-sm"
+                style="font-size: 0.8rem; padding: 0.4rem 1.2rem !important;"
+                onclick="fecharPainelRotacao()">Concluir</button>
+    </div>
+</div>
+
+<!-- Modal de Confirmação (Sair sem salvar) -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+            <div class="modal-header border-bottom-0 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                         style="width: 45px; height: 45px;">
+                        <i class="bi bi-exclamation-triangle fs-5"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title font-display fw-bold text-dark" id="confirmModalLabel">Atenção!</h5>
+                        <span class="text-taiko-gold small fw-bold text-uppercase"
+                              style="letter-spacing: 0.1em;">Aviso</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 pt-3">
+                <p id="confirmMessage" class="mb-0 text-secondary">
+                    Você tem alterações não salvas. Deseja sair sem salvar?
+                </p>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pe-4 pb-4 d-flex flex-column gap-2">
+                <button type="button" id="btnSaveAndLeave" class="btn w-100 btn-success px-3 py-2 fw-bold shadow"
+                        data-bs-dismiss="modal">
+                    Salvar Formação
+                </button>
+                <button type="button" id="btnConfirmAction" class="btn btn-excluir w-100 fw-bold shadow-sm"
+                        data-bs-dismiss="modal" style="box-shadow: none;">
+                    Sair
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Sucesso/Erro -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div id="messageBorder" class="modal-content"
+             style="border: none; border-top: 4px solid var(--taiko-gold);">
+            <div class="modal-header border-bottom-0 pb-0">
+                <div class="d-flex align-items-center gap-3">
+                    <div id="messageIconContainer"
+                         class="text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm bg-success"
+                         style="width: 45px; height: 45px;">
+                        <i id="messageIcon" class="bi bi-check-lg fs-5"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title font-display fw-bold text-dark" id="messageTitle">Sucesso!</h5>
+                        <span id="messageSubtitle" class="text-secondary small fw-bold text-uppercase"
+                              style="letter-spacing: 0.1em;">Notificação</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 pt-3">
+                <p id="messageBody" class="mb-0 text-secondary">
+                    A operação foi realizada com êxito.
+                </p>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                <button type="button" class="btn btn-taiko px-5 fw-bold shadow-sm"
+                        data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Salvar como Nova Formação -->
+<div class="modal fade" id="modalSalvarNovaFormacao" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title font-display fw-bold text-dark">Salvar como Nova Formação</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <label class="form-label fw-semibold text-secondary small text-uppercase">Nome da Nova Formação <span class="text-danger">*</span></label>
+                <div class="has-validation">
+                    <input type="text" class="form-control form-control-lg bg-light" id="inputNovaFormacaoNome" placeholder="Ex: Formação 2026">
+                    <div class="invalid-feedback" id="feedbackNovaFormacaoNome"></div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                <button type="button" class="btn btn-secondary fw-bold shadow-sm px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-taiko fw-bold shadow-sm px-4" onclick="confirmarSalvarNovaFormacao()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Definir Tocadores da Formação -->
+<div class="modal fade" id="modalMembrosFormacao" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title font-display fw-bold text-dark">Membros da Formação</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 pt-3">
+                <div class="input-group shadow-sm mb-3">
+                    <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" id="buscaMembrosParaAdicionar" class="form-control border-start-0 ps-0" placeholder="Pesquisar músico..." onkeyup="filtrarMembrosParaAdicionar()">
+                </div>
+                <div id="listaCheckboxMembros" class="list-group custom-scroll shadow-sm border border-secondary-subtle rounded-2" style="max-height: 250px; overflow-y: auto;">
+                    <!-- Checkboxes injetados pelo JS -->
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pe-4 pb-4">
+                <button type="button" class="btn btn-secondary fw-bold shadow-sm px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-taiko fw-bold shadow-sm px-4" onclick="salvarSelecaoMembrosFormacao()">Salvar Seleção</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="js/definirFormação.js"></script>
+<script src="js/script.js"></script>
+</body>
+
+
+</html>

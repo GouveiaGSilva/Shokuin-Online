@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ShokuinTaiko - Acervo de Membros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body onload="carregarHome(), mostrarCargos()">
+<div id="app-wrapper">
+    <div id="mobile-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-content d-flex flex-column">
+        <nav class="d-md-none bg-white shadow-sm p-3 d-flex justify-content-between align-items-center sticky-top">
+            <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle bg-taiko-red d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                    <span class="text-white font-display fw-bold" style="font-size: 0.875rem;">F</span>
+                </div>
+                <span class="font-display fw-bold fs-5 text-dark">SHOKUIN</span>
+            </div>
+            <button class="btn btn-link text-dark p-0 text-decoration-none" onclick="toggleSidebar()"><i class="bi bi-list fs-2"></i></button>
+        </nav>
+
+        <div class="container-fluid p-4 p-md-5 mx-auto" style="max-width: 1400px;">
+            <div class="text-center mb-5">
+                <h2 class="font-display fw-bold display-6 mb-2 text-dark">Acervo de Membros</h2>
+                <p class="text-muted mx-auto" style="max-width: 500px;">Catálogo geral dos integrantes do Dantai.</p>
+            </div>
+
+            <div class="glass-panel p-4 p-md-5 shadow-lg position-relative overflow-hidden" style="border-top: 4px solid var(--taiko-gold); background-color: #ffffff;">
+                <div class="position-relative z-1">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+                        <div class="input-group input-group-lg shadow-sm" style="max-width: 400px;">
+                            <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="busca" placeholder="Pesquisar..." onkeyup="filtrarMembros()" style="font-size: 1rem;">
+                        </div>
+                        <button class="btn btn-taiko shadow-sm px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#cadastrar"><i class="bi bi-plus-circle me-2"></i> Adicionar</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Nome</th>
+                                <th>CPF</th>
+                                <th>Sexo</th>
+                                <th>Cargo</th>
+                                <th>Nascimento</th>
+                                <th>Endereço</th>
+                                <th>Experiência</th>
+                                <th class="text-center text-nowrap" style="min-width: 260px;">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tabelaMembros">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!--Modal de cadastro !-->
+    <div class="modal fade" id="cadastrar" tabindex="-1" aria-labelledby="cadastrarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                            <i class="bi bi-pencil-square fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="cadastrarLabel">Cadastrar Membro</h5>
+                            <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Inserir informações</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-3">
+                    <form id="formCadastro">
+
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-8">
+                                <label for="nomeMembro" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Nome Completo <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-red"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="nomeMembro" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cpf" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CPF <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-card-text"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cpf" placeholder="000.000.000-00" maxlength="14" required oninput="mascaraCPF(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-4">
+                                <label for="dtNascimento" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Nascimento <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-gold"><i class="bi bi-calendar3"></i></span>
+                                    <input type="date" class="form-control border-start-0 ps-0 fw-medium bg-light" id="dtNascimento" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="sexo" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Sexo <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-gender-ambiguous"></i></span>
+                                    <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="sexo" required>
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Feminino</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="experiencia" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Experiência (Anos) <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-red"><i class="bi bi-star"></i></span>
+                                    <input type="number" class="form-control border-start-0 ps-0 fw-medium bg-light" id="experiencia" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-12">
+                                <div class="input-group shadow-sm" id="cargo">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="text-muted opacity-25 my-4"> <div class="row g-4 mb-3">
+                        <div class="col-md-3">
+                            <label for="cep" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CEP <span class="text-danger">*</span></label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-geo-alt"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cep" placeholder="00000-000" maxlength="9" required onblur="buscarEndereco()">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="estado" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Estado <span class="text-danger">*</span></label>
+                            <div class="input-group shadow-sm has-validation">
+                                <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-map"></i></span>
+                                <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="estado" required>
+                                    <option value="" selected disabled>UF</option>
+                                    <option value="AC">AC</option>
+                                    <option value="AL">AL</option>
+                                    <option value="AP">AP</option>
+                                    <option value="AM">AM</option>
+                                    <option value="BA">BA</option>
+                                    <option value="CE">CE</option>
+                                    <option value="DF">DF</option>
+                                    <option value="ES">ES</option>
+                                    <option value="GO">GO</option>
+                                    <option value="MA">MA</option>
+                                    <option value="MT">MT</option>
+                                    <option value="MS">MS</option>
+                                    <option value="MG">MG</option>
+                                    <option value="PA">PA</option>
+                                    <option value="PB">PB</option>
+                                    <option value="PR">PR</option>
+                                    <option value="PE">PE</option>
+                                    <option value="PI">PI</option>
+                                    <option value="RJ">RJ</option>
+                                    <option value="RN">RN</option>
+                                    <option value="RS">RS</option>
+                                    <option value="RO">RO</option>
+                                    <option value="RR">RR</option>
+                                    <option value="SC">SC</option>
+                                    <option value="SP">SP</option>
+                                    <option value="SE">SE</option>
+                                    <option value="TO">TO</option>
+                                </select>
+                                <div class="invalid-feedback">Informe o estado.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="cidade" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Cidade <span class="text-danger">*</span></label>
+                            <div class="input-group shadow-sm has-validation">
+                                <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-buildings"></i></span>
+                                <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="cidade" placeholder="Nome da cidade" required>
+                                <div class="invalid-feedback">Informe a cidade.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-9">
+                                <label for="rua" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Rua / Avenida <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-signpost-split"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="rua" placeholder="Endereço principal" required>
+                                    <div class="invalid-feedback">Informe a rua.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="numero" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Número <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-hash"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="numero" placeholder="123" required oninput="mascaraNumero(this)">
+                                    <div class="invalid-feedback">Informe o número.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label for="bairro" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Bairro <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-pin-map"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="bairro" placeholder="Nome do bairro" required>
+                                    <div class="invalid-feedback">Informe o bairro.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="complemento" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Complemento</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-door-open"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="complemento" placeholder="Apto, Bloco, etc (Opcional)">
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                    <div class="d-flex flex-column flex-md-row justify-content-end gap-3 mt-4 pt-4 border-top">
+                        <button type="reset" class="btn btn-light px-4 py-2 fw-semibold text-secondary shadow-sm d-flex align-items-center justify-content-center gap-2" style="border: 1px solid #e5e7eb;">
+                            <i class="bi bi-eraser fs-5"></i> Limpar
+                        </button>
+                        <button type="button" class="btn btn-taiko px-5 py-2 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" onclick="cadastrarMembro()">
+                            <i class="bi bi-check2-square fs-5"></i> Registrar Membro
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--- modal de edit--->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border: none; border-top: 4px solid var(--taiko-gold);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-taiko-red text-white p-2 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px;">
+                            <i class="bi bi-person-lines-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-display fw-bold text-dark" id="editModalLabel">Editar Membro</h5>
+                            <span class="text-taiko-gold small fw-bold text-uppercase" style="letter-spacing: 0.1em;">Atualizar informações</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-3">
+                    <form id="editMembroForm">
+
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-8">
+                                <label for="editNome" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Nome Completo <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-red"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editNome" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editCpf" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CPF <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-card-text"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editCpf" placeholder="000.000.000-00" maxlength="14" required oninput="mascaraCPF(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-4">
+                                <label for="editDtNascimento" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Nascimento <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-gold"><i class="bi bi-calendar3"></i></span>
+                                    <input type="date" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editDtNascimento" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editSexo" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Sexo <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-gender-ambiguous"></i></span>
+                                    <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="editSexo" required>
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Feminino</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editExperiencia" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Experiência (Anos) <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-taiko-red"><i class="bi bi-star"></i></span>
+                                    <input type="number" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editExperiencia" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-12">
+                                <div class="input-group shadow-sm" id="editCargo">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="text-muted opacity-25 my-4">
+
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-3">
+                                <label for="editCep" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">CEP <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-geo-alt"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editCep" placeholder="00000-000" maxlength="9" required onblur="buscarEnderecoEdit()">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="editEstado" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Estado <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-map"></i></span>
+                                    <select class="form-select border-start-0 ps-0 fw-medium bg-light" id="editEstado" required>
+                                        <option value="" selected disabled>UF</option>
+                                        <option value="AC">AC</option> <option value="AL">AL</option> <option value="AP">AP</option> <option value="AM">AM</option> <option value="BA">BA</option> <option value="CE">CE</option> <option value="DF">DF</option> <option value="ES">ES</option> <option value="GO">GO</option> <option value="MA">MA</option> <option value="MT">MT</option> <option value="MS">MS</option> <option value="MG">MG</option> <option value="PA">PA</option> <option value="PB">PB</option> <option value="PR">PR</option> <option value="PE">PE</option> <option value="PI">PI</option> <option value="RJ">RJ</option> <option value="RN">RN</option> <option value="RS">RS</option> <option value="RO">RO</option> <option value="RR">RR</option> <option value="SC">SC</option> <option value="SP">SP</option> <option value="SE">SE</option> <option value="TO">TO</option>
+                                    </select>
+                                    <div class="invalid-feedback">Informe o estado.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editCidade" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Cidade <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-buildings"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editCidade" placeholder="Nome da cidade" required>
+                                    <div class="invalid-feedback">Informe a cidade.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-3">
+                            <div class="col-md-9">
+                                <label for="editRua" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Rua / Avenida <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-signpost-split"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editRua" placeholder="Endereço principal" required>
+                                    <div class="invalid-feedback">Informe a rua.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="editNumero" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Número <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-hash"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editNumero" placeholder="123" required oninput="mascaraNumero(this)">
+                                    <div class="invalid-feedback">Informe o número.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label for="editBairro" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Bairro <span class="text-danger">*</span></label>
+                                <div class="input-group shadow-sm has-validation">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-pin-map"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editBairro" placeholder="Nome do bairro" required>
+                                    <div class="invalid-feedback">Informe o bairro.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editComplemento" class="form-label fw-semibold text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Complemento</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0 text-dark"><i class="bi bi-door-open"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0 fw-medium bg-light" id="editComplemento" placeholder="Apto, Bloco, etc (Opcional)">
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-end gap-3 mt-4 pt-4 border-top">
+                        <button type="button" class="btn btn-light px-4 fw-semibold text-secondary shadow-sm" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-taiko px-4 fw-bold shadow-sm d-flex align-items-center gap-2" onclick="atualizarMembro()">
+                            <i class="bi bi-save"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/script.js"></script>
+<script src="js/listarMembros.js"></script>
+<script src ="js/cadastrarMembros.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
