@@ -18,13 +18,8 @@ public class Conexao {
                 return true;
             }
 
-            Class.forName("org.postgresql.Driver");
-            String url = local + banco;
-            this.connect = DriverManager.getConnection(url, usuario, senha);
+            this.connect = SingletonDB.getDataSource().getConnection();
             return true;
-        } catch (ClassNotFoundException cnfex) {
-            this.erro = "Driver PostgreSQL não encontrado: " + cnfex.toString();
-            return false;
         } catch (SQLException sqlex) {
             this.erro = "Impossivel conectar com a base de dados: " + sqlex.toString();
             return false;
@@ -112,7 +107,7 @@ public class Conexao {
     public Connection getConnect() {
         try {
             if (this.connect == null || this.connect.isClosed()) {
-                conectar("jdbc:postgresql://localhost:5432/", "shokuintaiko", "postgres", "postgres123");
+                conectar(SingletonDB.getDbUrl(), SingletonDB.getDbName(), SingletonDB.getDbUser(), SingletonDB.getDbPassword());
             }
         } catch (SQLException ignored) {}
         return this.connect;
