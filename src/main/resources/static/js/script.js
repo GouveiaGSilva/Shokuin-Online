@@ -9,7 +9,11 @@
     link.href = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EW1pVi14HZShWF8KD4Uu3NALLJ7uBalzJA&s';
 })();
 
+let homeCarregado = false;
+
 async function carregarHome() {
+    if (homeCarregado) return;
+    homeCarregado = true;
     try {
         const response = await fetch("/apiautenticacao/usuario-atual");
         if (response.status === 401) {
@@ -20,12 +24,12 @@ async function carregarHome() {
             throw new Error(`Erro na requisição: Status ${response.status}`);
         }
         const usuario = await response.json();
-        
+
         const path = decodeURIComponent(window.location.pathname).toLowerCase();
         if (usuario.nivel === 1) {
             const paginasPermitidas = ['/exibiragendas.html', '/index.html', '/login.html', '/'];
             if (!paginasPermitidas.includes(path)) {
-                window.location.href = '/exibirAgendas.html';
+                window.location.href = '/index.html';
                 return;
             }
         } else if (usuario.nivel === 2) {
@@ -39,13 +43,23 @@ async function carregarHome() {
             }
         }
 
+        if (usuario.nivel === 1 || usuario.nivel === 2) {
+            const btnApreIndex = document.getElementById("btnNovaApresentacaoIndex");
+            if (btnApreIndex) btnApreIndex.style.display = 'none';
+        }
+
+        if (usuario.nivel === 1) {
+            const boxFormacoes = document.getElementById("boxGestaoFormacoesIndex");
+            if (boxFormacoes) boxFormacoes.style.display = 'none';
+        }
+
         const iniciais = usuario.nome ? usuario.nome.substring(0, 2).toUpperCase() : "US";
         const sidebarElement = document.getElementById("sidebar");
         if (!sidebarElement)
             return;
         let cargos = ["", "Membro Comum", "Criador de Formações", "Acesso Total"];
         let textoCargo = usuario.nivel && usuario.nivel <= 3 ? cargos[usuario.nivel] : "Membro Comum";
-        
+
         let menuItems = ``;
 
         if (usuario.nivel === 1) {
@@ -398,8 +412,8 @@ function carregarIconesCargos() {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('mobile-overlay');
-    if(sidebar) sidebar.classList.toggle('show');
-    if(overlay) overlay.classList.toggle('show');
+    if (sidebar) sidebar.classList.toggle('show');
+    if (overlay) overlay.classList.toggle('show');
 }
 
 (function () {
@@ -485,7 +499,7 @@ function navegarEtapa(href) {
 
 function mostrarModalAlerta(titulo, mensagem, tipo = 'erro', callback = null) {
     const iconClass = tipo === 'erro' ? 'bi-x-circle-fill text-danger' : 'bi-check-circle-fill text-success';
-    
+
     let modalEl = document.getElementById('modalGenericoSistema');
     if (!modalEl) {
         const div = document.createElement('div');
@@ -517,9 +531,9 @@ function mostrarModalAlerta(titulo, mensagem, tipo = 'erro', callback = null) {
         `;
         document.body.appendChild(div.firstElementChild);
         modalEl = document.getElementById('modalGenericoSistema');
-        
+
         // Add listener for callback
-        modalEl.addEventListener('hidden.bs.modal', function() {
+        modalEl.addEventListener('hidden.bs.modal', function () {
             const cb = modalEl.getAttribute('data-callback-pending');
             if (cb === 'true' && typeof window.modalGenericoCallback === 'function') {
                 window.modalGenericoCallback();
@@ -531,20 +545,26 @@ function mostrarModalAlerta(titulo, mensagem, tipo = 'erro', callback = null) {
 
     document.getElementById('modalGenericoTitulo').innerText = titulo;
     document.getElementById('modalGenericoMensagem').innerText = mensagem;
-    
+
     const iconEl = document.getElementById('modalGenericoIcon');
     iconEl.className = `bi ${iconClass}`;
-    
+
     const btnEl = document.getElementById('modalGenericoBtn');
     btnEl.className = tipo === 'erro' ? 'btn btn-danger w-100 fw-bold shadow-sm' : 'btn btn-success w-100 fw-bold shadow-sm';
-    
+
     if (callback) {
         window.modalGenericoCallback = callback;
         modalEl.setAttribute('data-callback-pending', 'true');
     } else {
         modalEl.setAttribute('data-callback-pending', 'false');
     }
-    
+
     const bsModal = new bootstrap.Modal(modalEl);
     bsModal.show();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', carregarHome);
+} else {
+    carregarHome();
 }
