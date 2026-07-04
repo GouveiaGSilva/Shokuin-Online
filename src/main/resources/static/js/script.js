@@ -20,6 +20,25 @@ async function carregarHome() {
             throw new Error(`Erro na requisição: Status ${response.status}`);
         }
         const usuario = await response.json();
+        
+        const path = decodeURIComponent(window.location.pathname).toLowerCase();
+        if (usuario.nivel === 1) {
+            const paginasPermitidas = ['/exibiragendas.html', '/index.html', '/login.html', '/'];
+            if (!paginasPermitidas.includes(path)) {
+                window.location.href = '/exibirAgendas.html';
+                return;
+            }
+        } else if (usuario.nivel === 2) {
+            const paginasPermitidas = [
+                '/exibiragendas.html', '/index.html', '/login.html', '/',
+                '/definirformação.html', '/listarformacoes.html'
+            ];
+            if (!paginasPermitidas.includes(path)) {
+                window.location.href = '/index.html';
+                return;
+            }
+        }
+
         const iniciais = usuario.nome ? usuario.nome.substring(0, 2).toUpperCase() : "US";
         const sidebarElement = document.getElementById("sidebar");
         if (!sidebarElement)
