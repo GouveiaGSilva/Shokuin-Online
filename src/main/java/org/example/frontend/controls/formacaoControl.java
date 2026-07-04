@@ -103,6 +103,19 @@ public class formacaoControl {
         }
     }
 
+    @GetMapping(value = "/capa/{id}", produces = "text/plain")
+    public ResponseEntity<String> getCapa(@PathVariable int id) {
+        SingletonDB.conectar();
+        String capa = new Formacao().buscarCapa(id);
+        SingletonDB.desconectar();
+
+        if (capa != null && !capa.isEmpty()) {
+            return ResponseEntity.ok(capa);
+        } else {
+            return ResponseEntity.ok("");
+        }
+    }
+
     @DeleteMapping("excluir-id")
     public ResponseEntity<Object> deletarFormacao(@RequestBody Formacao formacao) {
         SingletonDB.conectar();

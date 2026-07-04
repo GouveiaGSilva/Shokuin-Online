@@ -24,21 +24,11 @@ function renderizar(lista) {
     lista.forEach(item => {
         let statusBadge = '';
 
-        // Tenta buscar a imagem salva no Banco (forma_img)
-        const previewSalvo = item.forma_img ? `${item.forma_img}` : null;
-
-        let imgTop = '';
-        if (previewSalvo) {
-            imgTop = `
-            <div style="height: 160px; display: flex; justify-content: center; align-items: center; border-top-left-radius: 1rem; border-top-right-radius: 1rem; overflow: hidden; background: radial-gradient(circle, #ffffff 0%, #f0f0f0 100%); border-bottom: 1px solid #eee;">
-                <img src="${previewSalvo}" style="width: 100%; height: 100%; object-fit: contain; padding: 15px;" alt="Preview da Formação">
-            </div>`;
-        } else {
-            imgTop = `
-            <div style="height: 160px; display: flex; align-items: center; justify-content: center; border-top-left-radius: 1rem; border-top-right-radius: 1rem; background: linear-gradient(135deg, rgba(168,26,26,0.1) 0%, rgba(204,153,51,0.1) 100%); border-bottom: 1px solid #eee;">
-                <i class="bi bi-music-note-list fs-1 text-muted opacity-50"></i>
-            </div>`;
-        }
+        let imgTop = `
+        <div style="height: 160px; display: flex; justify-content: center; align-items: center; border-top-left-radius: 1rem; border-top-right-radius: 1rem; overflow: hidden; background: radial-gradient(circle, #ffffff 0%, #f0f0f0 100%); border-bottom: 1px solid #eee;">
+            <img id="img-capa-${item.forma_id}" src="" style="width: 100%; height: 100%; object-fit: contain; padding: 15px; display: none;" alt="Preview da Formação">
+            <div id="loader-capa-${item.forma_id}" class="spinner-border text-secondary" role="status" style="width: 2rem; height: 2rem;"></div>
+        </div>`;
 
         const musicaNome = item.musi_id && item.musi_id.nome ? item.musi_id.nome : 'Sem Música';
         const tempoMusica = item.musi_id && item.musi_id.duracao ? `${item.musi_id.duracao} min` : '-';
@@ -80,6 +70,32 @@ function renderizar(lista) {
             </div>
         </div>`;
     });
+
+    // Lazy load das capas
+    lista.forEach(item => {
+        fetch('/formacao/capa/' + item.forma_id)
+            .then(res => res.text())
+            .then(data => {
+                const loader = document.getElementById('loader-capa-' + item.forma_id);
+                const imgEl = document.getElementById('img-capa-' + item.forma_id);
+                if (loader) loader.style.display = 'none';
+                
+                if (imgEl && data && data.length > 50) {
+                    imgEl.src = data;
+                    imgEl.style.display = 'block';
+                } else if (imgEl) {
+                    // Sem capa
+                    imgEl.parentElement.innerHTML = `
+                    <div style="height: 160px; display: flex; align-items: center; justify-content: center; border-top-left-radius: 1rem; border-top-right-radius: 1rem; background: linear-gradient(135deg, rgba(168,26,26,0.1) 0%, rgba(204,153,51,0.1) 100%); border-bottom: 1px solid #eee; width: 100%;">
+                        <i class="bi bi-music-note-list fs-1 text-muted opacity-50"></i>
+                    </div>`;
+                }
+            })
+            .catch(e => {
+                const loader = document.getElementById('loader-capa-' + item.forma_id);
+                if (loader) loader.style.display = 'none';
+            });
+    });
 }
 
 
@@ -118,6 +134,7 @@ function deletarFormacao(id, nome, img) {
     botao.setAttribute("onclick", "excluirFormacao('" + id + "')");
 
     const mensagem = document.getElementById("confirmMessage");
+    let imgHtml = "";
     if (img) {
         imgHtml = `
         <div class="mt-3 text-center">

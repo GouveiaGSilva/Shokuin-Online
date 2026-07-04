@@ -8,6 +8,97 @@
     }
     link.href = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_EW1pVi14HZShWF8KD4Uu3NALLJ7uBalzJA&s';
 })();
+// ====== GLOBAL LOADER PARA REQUISIÇÕES ======
+let activeRequests = 0;
+
+function mostrarGlobalLoader() {
+    if (activeRequests === 0) {
+        let loader = document.getElementById('shokuin-global-loader');
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.id = 'shokuin-global-loader';
+            loader.style.cssText = `
+                position: fixed;
+                top: 0; left: 0; width: 100vw; height: 100vh;
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(4px);
+                z-index: 10000;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: opacity 0.3s ease;
+            `;
+            loader.innerHTML = `
+                <style>
+                    @keyframes taiko-pulse {
+                        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.4); }
+                        70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(198, 40, 40, 0); }
+                        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); }
+                    }
+                    .loader-pulse-circle {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, var(--taiko-red, #C62828), #8a1717);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        animation: taiko-pulse 1.5s infinite;
+                        margin-bottom: 20px;
+                    }
+                </style>
+                <div class="loader-pulse-circle text-white shadow-lg">
+                    <i class="bi bi-hourglass-split fs-1"></i>
+                </div>
+                <h4 class="font-display fw-bold text-dark mb-1">Só um momento...</h4>
+                <span class="text-muted fw-medium" style="font-size: 1rem;">Salvando tudo com segurança para você! 🥁</span>
+            `;
+            document.body.appendChild(loader);
+        }
+        loader.style.display = 'flex';
+    }
+    activeRequests++;
+}
+
+function esconderGlobalLoader() {
+    activeRequests--;
+    if (activeRequests <= 0) {
+        activeRequests = 0;
+        const loader = document.getElementById('shokuin-global-loader');
+        if (loader) {
+            loader.style.display = 'none';
+        }
+    }
+}
+
+const originalFetch = window.fetch;
+window.fetch = async function () {
+    let showLoader = false;
+    const options = arguments[1];
+
+    if (options && options.method) {
+        const method = options.method.toUpperCase();
+        // Dispara o loading apenas para ações de escrita no banco (alterar, salvar, excluir)
+        if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
+            showLoader = true;
+        }
+    }
+
+    if (showLoader) {
+        mostrarGlobalLoader();
+    }
+
+    try {
+        const response = await originalFetch.apply(this, arguments);
+        return response;
+    } finally {
+        if (showLoader) {
+            esconderGlobalLoader();
+        }
+    }
+};
+// ============================================
 
 let homeCarregado = false;
 

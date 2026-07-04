@@ -107,7 +107,7 @@ public class Formacao {
 
     public List<Formacao> listarTodas() {
         List<Formacao> lista = new ArrayList<>();
-        String sql = "SELECT f.forma_id, f.forma_nome, f.forma_img, f.musi_id, m.musi_nome, m.musi_duracao " +
+        String sql = "SELECT f.forma_id, f.forma_nome, f.musi_id, m.musi_nome, m.musi_duracao " +
                      "FROM Formacao f " +
                      "LEFT JOIN musicas m ON f.musi_id = m.musi_id " +
                      "ORDER BY f.forma_nome";
@@ -117,7 +117,6 @@ public class Formacao {
                 Formacao f = new Formacao();
                 f.setId(rs.getInt("forma_id"));
                 f.setNome(rs.getString("forma_nome"));
-                f.setImagem(rs.getString("forma_img"));
                 
                 int musiId = rs.getInt("musi_id");
                 if (musiId > 0) {
@@ -134,6 +133,19 @@ public class Formacao {
             System.out.println("Erro ao listar formações: " + e.getMessage());
         }
         return lista;
+    }
+
+    public String buscarCapa(int buscaId) {
+        String sql = "SELECT forma_img FROM Formacao WHERE forma_id = " + buscaId;
+        ResultSet rs = SingletonDB.getConexao().consultar(sql);
+        try {
+            if (rs != null && rs.next()) {
+                return rs.getString("forma_img");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar capa da formacao: " + e.getMessage());
+        }
+        return null;
     }
 
     public Formacao buscarPorId(int buscaId) {
@@ -207,6 +219,19 @@ public class Formacao {
     }
 
     public boolean deletarFormacao() {
+        // Excluir dependências primeiro (simulando ON DELETE CASCADE)
+        String sqlMembros = "DELETE FROM membros_formacao WHERE id_formacao = " + id;
+        SingletonDB.getConexao().manipular(sqlMembros);
+
+        String sqlInstrumentos = "DELETE FROM instrumentos_formacao WHERE id_formacao = " + id;
+        SingletonDB.getConexao().manipular(sqlInstrumentos);
+
+        String sqlListaMusicas = "DELETE FROM listamusicas WHERE forma_id = " + id;
+        SingletonDB.getConexao().manipular(sqlListaMusicas);
+
+        String sqlPalco = "DELETE FROM palco WHERE forma_id = " + id;
+        SingletonDB.getConexao().manipular(sqlPalco);
+
         String sql = "DELETE FROM formacao WHERE forma_id = " + id;
         if (SingletonDB.getConexao().manipular(sql)) {
             return true;

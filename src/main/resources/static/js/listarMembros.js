@@ -238,8 +238,8 @@ function atualizarMembro() {
     fetch("/apimembro/get-membro?keyword=")
         .then(res => res.json())
         .then(membros => {
-            const nomeExiste = membros.some(m => m.id !== membroOriginal.id && m.nome.trim().toLowerCase() === membroAtualizado.nome.trim().toLowerCase());
-            const cpfExiste = membros.some(m => m.id !== membroOriginal.id && m.cpf.trim() === membroAtualizado.cpf.trim());
+            const nomeExiste = membros.some(m => m.id !== membroOriginal.id && m.nome && m.nome.trim().toLowerCase() === membroAtualizado.nome.trim().toLowerCase());
+            const cpfExiste = membros.some(m => m.id !== membroOriginal.id && m.cpf && m.cpf.trim() === membroAtualizado.cpf.trim());
 
             if (nomeExiste) {
                 mostrarModalAlerta("Erro de Validação", "Já existe outro membro cadastrado com este Nome!", "erro");

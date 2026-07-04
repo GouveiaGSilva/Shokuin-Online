@@ -55,7 +55,7 @@ async function validaInstrumento(nome) {
                 return resp.json()
                     .then(data => {
                         for (let item of data) {
-                            if (item.instrumento && item.instrumento.instru_nome.trim().toLowerCase() === nome.trim().toLowerCase()) {
+                            if (item.instrumento && item.instrumento.instru_nome && item.instrumento.instru_nome.trim().toLowerCase() === nome.trim().toLowerCase()) {
                                 validacao = false;
                             }
                         }

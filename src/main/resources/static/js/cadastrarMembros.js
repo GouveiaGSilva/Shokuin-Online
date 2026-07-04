@@ -40,8 +40,8 @@ function cadastrarMembro() {
     fetch("/apimembro/get-membro?keyword=")
         .then(res => res.json())
         .then(membros => {
-            const nomeExiste = membros.some(m => m.nome.trim().toLowerCase() === membro.nome.trim().toLowerCase());
-            const cpfExiste = membros.some(m => m.cpf.trim() === membro.cpf.trim());
+            const nomeExiste = membros.some(m => m.nome && m.nome.trim().toLowerCase() === membro.nome.trim().toLowerCase());
+            const cpfExiste = membros.some(m => m.cpf && m.cpf.trim() === membro.cpf.trim());
 
             if (nomeExiste) {
                 mostrarModalAlerta("Erro de Validação", "Já existe um membro cadastrado com este Nome!", "erro");

@@ -146,7 +146,7 @@ async function validaInstrumento(nome) {
                 return resp.json()
                     .then(data => {
                         for (let item of data) {
-                            if (item.instrumento && item.instrumento.instru_nome.trim().toLowerCase() === nome.trim().toLowerCase()) {
+                            if (item.instrumento && item.instrumento.instru_nome && item.instrumento.instru_nome.trim().toLowerCase() === nome.trim().toLowerCase()) {
                                 validacao = false;
                             }
                         }
@@ -163,7 +163,7 @@ async function validaInstrumentoAtualizar(nome, id) {
                 return resp.json()
                     .then(data => {
                         for (let item of data) {
-                            if (item.instrumento && item.instrumento.instru_nome.trim().toLowerCase() === nome.trim().toLowerCase() && item.instrumento.instru_id !== id) {
+                            if (item.instrumento && item.instrumento.instru_nome && item.instrumento.instru_nome.trim().toLowerCase() === nome.trim().toLowerCase() && item.instrumento.instru_id !== id) {
                                 validacao = false;
                             }
                         }
